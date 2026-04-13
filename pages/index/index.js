@@ -6,31 +6,25 @@ Page({
   data: {
     banner: [],
     
-    // 尺寸分类（包含id）
-    sizeCategories: [],
-    currentSizeId: 0,
+    // 分类筛选 - 存储分类对象（包含id和name）
+    sizeCategories: [],      // 尺寸分类列表 [{id, name}]
+    panelCategories: [],     // 面板类型分类列表 [{id, name}]
+    currentSizeId: 0,        // 当前选中的尺寸分类ID，0表示全部
+    currentPanelId: 0,       // 当前选中的面板分类ID，0表示全部
     currentSizeName: '全部',
-    sizeGoodsList: [],
-    sizeGoodsPage: 1,
-    sizeGoodsLoading: false,
-    sizeGoodsFinished: false,
-
-    // 面板类型分类（包含id）
-    panelCategories: [],
-    currentPanelId: 0,
     currentPanelName: '全部',
-    panelGoodsList: [],
-    panelGoodsPage: 1,
-    panelGoodsLoading: false,
-    panelGoodsFinished: false,
+
+    // 筛选商品列表（统一列表）
+    goodsList: [],
+    page: 1,
+    limit: 10,
+    loading: false,
+    finished: false,
 
     // 品牌
     screenBrands: [],
 
-    //分页
-    page: 1,
-    limit: 10,
-    // 商品
+    // 其他商品
     hotGoods: [],
     newGoods: [],
     floorGoods: [],
@@ -40,6 +34,57 @@ Page({
   onLoad() {
     this.getIndexData();
     this.getCatalogData();
+    this.getGoodsList(true);
+  },
+
+  onReachBottom() {
+    if (this.data.finished || this.data.loading) return;
+    
+    this.setData({
+      page: this.data.page + 1
+    });
+    
+    this.getGoodsList(false);
+  },
+
+  /**
+   * 获取商品列表 - 根据分类ID筛选
+   */
+  getGoodsList(reset = true) {
+    if (this.data.loading) return;
+    
+    this.setData({ loading: true });
+    
+    const { currentSizeId, currentPanelId, page, limit } = this.data;
+    
+    let params = {
+      page,
+      limit
+    };
+    
+    // 使用分类ID进行筛选（优先尺寸，其次面板）
+    if (currentSizeId > 0) {
+      params.categoryId = currentSizeId;
+    } else if (currentPanelId > 0) {
+      params.categoryId = currentPanelId;
+    }
+    
+    util.request(api.GoodsList, params).then(res => {
+      if (res.errno === 0) {
+        let list = res.data.list || [];
+        
+        this.setData({
+          goodsList: reset ? list : this.data.goodsList.concat(list),
+          finished: list.length < limit,
+          loading: false
+        });
+      } else {
+        this.setData({ loading: false });
+      }
+    }).catch(err => {
+      console.error('getGoodsList error:', err);
+      this.setData({ loading: false });
+    });
   },
 
   /**
@@ -94,7 +139,7 @@ Page({
    */
   getCatalogData() {
     const that = this;
-  
+    
     util.request(api.CatalogList).then(res => {
       if (res.errno === 0) {
         const categoryList = res.data.categoryList || [];
@@ -138,173 +183,39 @@ Page({
   },
 
   /**
-   * 尺寸筛选点击
+   * 尺寸筛选
    */
   onSizeFilter(e) {
-    const { id, name } = e.currentTarget.dataset;
+    const id = Number(e.currentTarget.dataset.id);
+    const name = e.currentTarget.dataset.name;
     
-    // 点击"全部"则清空筛选结果
-    if (id === 0) {
-      this.setData({
-        currentSizeId: 0,
-        currentSizeName: '全部',
-        sizeGoodsList: [],
-        sizeGoodsPage: 1,
-        sizeGoodsFinished: false
-      });
-      return;
-    }
-
-    // 点击具体分类
     this.setData({
       currentSizeId: id,
       currentSizeName: name,
-      sizeGoodsList: [],
-      sizeGoodsPage: 1,
-      sizeGoodsFinished: false
+      page: 1,
+      goodsList: [],
+      finished: false
     });
-  
-    this.getSizeGoods(true);
+    
+    this.getGoodsList(true);
   },
 
   /**
-   * 获取尺寸分类下的商品
-   */
-  getSizeGoods(reset = true) {
-    if (this.data.sizeGoodsLoading || this.data.currentSizeId === 0) return;
-    
-    const { currentSizeId, sizeGoodsPage, limit } = this.data;
-    
-    this.setData({ sizeGoodsLoading: true });
-
-    util.request(api.GoodsList, {
-      categoryId: currentSizeId,
-      page: sizeGoodsPage,
-      limit
-    }).then(res => {
-      if (res.errno === 0) {
-        let list = res.data.list || [];
-        this.setData({
-          sizeGoodsList: reset ? list : this.data.sizeGoodsList.concat(list),
-          sizeGoodsFinished: list.length < limit,
-          sizeGoodsLoading: false
-        });
-      } else {
-        this.setData({ sizeGoodsLoading: false });
-      }
-    }).catch(err => {
-      console.error('getSizeGoods error:', err);
-      this.setData({ sizeGoodsLoading: false });
-    });
-  },
-
-  /**
-   * 加载更多尺寸商品
-   */
-  loadMoreSizeGoods() {
-    if (this.data.sizeGoodsFinished || this.data.sizeGoodsLoading) return;
-    
-    this.setData({
-      sizeGoodsPage: this.data.sizeGoodsPage + 1
-    });
-    
-    this.getSizeGoods(false);
-  },
-
-  /**
-   * 面板类型筛选点击
+   * 面板类型筛选
    */
   onPanelTypeFilter(e) {
-    const { id, name } = e.currentTarget.dataset;
+    const id = Number(e.currentTarget.dataset.id);
+    const name = e.currentTarget.dataset.name;
 
-    // 点击"全部"则清空筛选结果
-    if (id === 0) {
-      this.setData({
-        currentPanelId: 0,
-        currentPanelName: '全部',
-        panelGoodsList: [],
-        panelGoodsPage: 1,
-        panelGoodsFinished: false
-      });
-      return;
-    }
-
-    // 点击具体分类
     this.setData({
       currentPanelId: id,
       currentPanelName: name,
-      panelGoodsList: [],
-      panelGoodsPage: 1,
-      panelGoodsFinished: false
+      page: 1,
+      goodsList: [],
+      finished: false
     });
 
-    this.getPanelGoods(true);
-  },
-
-  /**
-   * 获取面板类型分类下的商品
-   */
-  getPanelGoods(reset = true) {
-    if (this.data.panelGoodsLoading || this.data.currentPanelId === 0) return;
-    
-    const { currentPanelId, panelGoodsPage, limit } = this.data;
-    
-    this.setData({ panelGoodsLoading: true });
-
-    util.request(api.GoodsList, {
-      categoryId: currentPanelId,
-      page: panelGoodsPage,
-      limit
-    }).then(res => {
-      if (res.errno === 0) {
-        let list = res.data.list || [];
-        this.setData({
-          panelGoodsList: reset ? list : this.data.panelGoodsList.concat(list),
-          panelGoodsFinished: list.length < limit,
-          panelGoodsLoading: false
-        });
-      } else {
-        this.setData({ panelGoodsLoading: false });
-      }
-    }).catch(err => {
-      console.error('getPanelGoods error:', err);
-      this.setData({ panelGoodsLoading: false });
-    });
-  },
-
-  /**
-   * 加载更多面板商品
-   */
-  loadMorePanelGoods() {
-    if (this.data.panelGoodsFinished || this.data.panelGoodsLoading) return;
-    
-    this.setData({
-      panelGoodsPage: this.data.panelGoodsPage + 1
-    });
-    
-    this.getPanelGoods(false);
-  },
-
-  /**
-   * 查看更多尺寸商品（跳转分类页）
-   */
-  viewMoreSizeGoods() {
-    if (this.data.currentSizeId > 0) {
-      wx.navigateTo({
-        url: '/pages/category/category?id=' + this.data.currentSizeId
-      });
-    }
-  },
-
-  /**
-   * 查看更多面板商品（跳转分类页）
-   */
-  viewMorePanelGoods() {
-    if (this.data.currentPanelId > 0) {
-      wx.navigateTo({
-        url: '/pages/category/category?id=' + this.data.currentPanelId
-      });
-    }
+    this.getGoodsList(true);
   },
 
   /**
@@ -312,25 +223,18 @@ Page({
    */
   onPullDownRefresh() {
     wx.showNavigationBarLoading();
-  
+    
     this.setData({
-      sizeGoodsList: [],
-      sizeGoodsPage: 1,
-      panelGoodsList: [],
-      panelGoodsPage: 1
+      page: 1,
+      goodsList: [],
+      finished: false
     });
-  
+    
     Promise.all([
       this.getIndexData(),
       this.getCatalogData()
     ]).then(() => {
-      // 如果有选中分类，��新加载
-      if (this.data.currentSizeId > 0) {
-        this.getSizeGoods(true);
-      }
-      if (this.data.currentPanelId > 0) {
-        this.getPanelGoods(true);
-      }
+      this.getGoodsList(true);
       wx.hideNavigationBarLoading();
       wx.stopPullDownRefresh();
     });

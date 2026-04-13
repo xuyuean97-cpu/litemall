@@ -47,113 +47,88 @@
     </scroll-view>
 </view>
 
-<!-- 按尺寸选购 -->
-<view class="quick-filter" wx:if="{{sizeCategories.length > 1}}">
-    <view class="filter-title">按尺寸选购</view>
-    <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
-        <view class="filter-tags">
-            <view class="filter-tag {{currentSizeId === item.id ? 'active' : ''}}"
-                  wx:for="{{sizeCategories}}"
-                  wx:key="id"
-                  bindtap="onSizeFilter"
-                  data-id="{{item.id}}"
-                  data-name="{{item.name}}">
-                {{item.name}}
-            </view>
-        </view>
-    </scroll-view>
-
-    <!-- 尺寸筛选结果（只有选中具体分类时才显示） -->
-    <view class="filter-result" wx:if="{{currentSizeId > 0}}">
-        <view class="filter-result-header">
-            <text class="result-title">{{currentSizeName}}</text>
-            <view class="result-more" bindtap="viewMoreSizeGoods">
-                <text>查看更多</text>
-                <van-icon name="arrow" size="12px" />
-            </view>
-        </view>
-
-        <!-- 加载中 -->
-        <view class="filter-loading" wx:if="{{sizeGoodsLoading && sizeGoodsList.length === 0}}">
-            <text>加载中...</text>
-        </view>
-
-        <!-- 商品列表 -->
-        <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}" wx:if="{{sizeGoodsList.length > 0}}">
-            <view class="goods-scroll-list">
-                <view class="goods-scroll-item" wx:for="{{sizeGoodsList}}" wx:key="id">
-                    <navigator url="/pages/goods/goods?id={{item.id}}">
-                        <image class="scroll-img" src="{{item.picUrl}}" mode="aspectFill"></image>
-                        <text class="scroll-model">{{item.model || item.name}}</text>
-                        <text class="scroll-price">¥{{item.retailPrice}}</text>
-                    </navigator>
-                </view>
-                <!-- 加载更多 -->
-                <view class="load-more-btn" wx:if="{{!sizeGoodsFinished}}" bindtap="loadMoreSizeGoods">
-                    <text>{{sizeGoodsLoading ? '加载中...' : '更多'}}</text>
+<!-- 筛选区域 -->
+<view class="filter-section">
+    <!-- 按尺寸选购 -->
+    <view class="quick-filter" wx:if="{{sizeCategories.length > 1}}">
+        <view class="filter-title">按尺寸选购</view>
+        <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
+            <view class="filter-tags">
+                <view class="filter-tag {{currentSizeId === item.id ? 'active' : ''}}"
+                      wx:for="{{sizeCategories}}"
+                      wx:key="id"
+                      bindtap="onSizeFilter"
+                      data-id="{{item.id}}"
+                      data-name="{{item.name}}">
+                    {{item.name}}
                 </view>
             </view>
         </scroll-view>
+    </view>
 
-        <!-- 无结果 -->
-        <view class="no-result" wx:if="{{sizeGoodsList.length === 0 && !sizeGoodsLoading}}">
-            <text>暂无 {{currentSizeName}} 的商品</text>
-        </view>
+    <!-- 面板类型 -->
+    <view class="quick-filter" wx:if="{{panelCategories.length > 1}}">
+        <view class="filter-title">面板类型</view>
+        <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
+            <view class="filter-tags">
+                <view class="filter-tag {{currentPanelId === item.id ? 'active' : ''}}"
+                      wx:for="{{panelCategories}}"
+                      wx:key="id"
+                      bindtap="onPanelTypeFilter"
+                      data-id="{{item.id}}"
+                      data-name="{{item.name}}">
+                    {{item.name}}
+                </view>
+            </view>
+        </scroll-view>
     </view>
 </view>
 
-<!-- 面板类型 -->
-<view class="quick-filter" wx:if="{{panelCategories.length > 1}}">
-    <view class="filter-title">面板类型</view>
-    <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
-        <view class="filter-tags">
-            <view class="filter-tag {{currentPanelId === item.id ? 'active' : ''}}"
-                  wx:for="{{panelCategories}}"
-                  wx:key="id"
-                  bindtap="onPanelTypeFilter"
-                  data-id="{{item.id}}"
-                  data-name="{{item.name}}">
-                {{item.name}}
-            </view>
+<!-- 筛选结果商品列表 -->
+<view class="section goods-section">
+    <view class="section-header">
+        <view class="header-left">
+            <view class="header-icon filter-icon"></view>
+            <text class="header-title">
+                <block wx:if="{{currentSizeId > 0 || currentPanelId > 0}}">
+                    筛选结果
+                    <text class="filter-condition">
+                        （<block wx:if="{{currentSizeId > 0}}">{{currentSizeName}}</block><block wx:if="{{currentSizeId > 0 && currentPanelId > 0}}"> + </block><block wx:if="{{currentPanelId > 0}}">{{currentPanelName}}</block>）
+                    </text>
+                </block>
+                <block wx:else>全部商品</block>
+            </text>
         </view>
-    </scroll-view>
+    </view>
 
-    <!-- 面板筛选结果（只有选中具体分类时才显示） -->
-    <view class="filter-result" wx:if="{{currentPanelId > 0}}">
-        <view class="filter-result-header">
-            <text class="result-title">{{currentPanelName}}</text>
-            <view class="result-more" bindtap="viewMorePanelGoods">
-                <text>查看更多</text>
-                <van-icon name="arrow" size="12px" />
-            </view>
-        </view>
-
-        <!-- 加载中 -->
-        <view class="filter-loading" wx:if="{{panelGoodsLoading && panelGoodsList.length === 0}}">
-            <text>加载中...</text>
-        </view>
-
-        <!-- 商品列表 -->
-        <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}" wx:if="{{panelGoodsList.length > 0}}">
-            <view class="goods-scroll-list">
-                <view class="goods-scroll-item" wx:for="{{panelGoodsList}}" wx:key="id">
-                    <navigator url="/pages/goods/goods?id={{item.id}}">
-                        <image class="scroll-img" src="{{item.picUrl}}" mode="aspectFill"></image>
-                        <text class="scroll-model">{{item.model || item.name}}</text>
-                        <text class="scroll-price">¥{{item.retailPrice}}</text>
-                    </navigator>
+    <!-- 商品列表 -->
+    <view class="goods-list" wx:if="{{goodsList.length > 0}}">
+        <view class="goods-card" wx:for="{{goodsList}}" wx:key="id">
+            <navigator url="/pages/goods/goods?id={{item.id}}" class="goods-link">
+                <view class="goods-img-wrap">
+                    <image class="goods-img" src="{{item.picUrl}}" mode="aspectFill"></image>
                 </view>
-                <!-- 加载更多 -->
-                <view class="load-more-btn" wx:if="{{!panelGoodsFinished}}" bindtap="loadMorePanelGoods">
-                    <text>{{panelGoodsLoading ? '加载中...' : '更多'}}</text>
+                <view class="goods-info">
+                    <text class="goods-model">{{item.model || item.name}}</text>
+                    <text class="goods-price">¥{{item.retailPrice}}</text>
                 </view>
-            </view>
-        </scroll-view>
-
-        <!-- 无结果 -->
-        <view class="no-result" wx:if="{{panelGoodsList.length === 0 && !panelGoodsLoading}}">
-            <text>暂无 {{currentPanelName}} 的商品</text>
+            </navigator>
         </view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading" wx:if="{{loading}}">
+        <text>加载中...</text>
+    </view>
+
+    <!-- 没有更多 -->
+    <view class="no-more" wx:if="{{finished && goodsList.length > 0}}">
+        <text>没有更多了</text>
+    </view>
+
+    <!-- 无结果 -->
+    <view class="no-result" wx:if="{{goodsList.length === 0 && !loading}}">
+        <text>暂无商品</text>
     </view>
 </view>
 
@@ -202,7 +177,7 @@
 
     <view class="goods-list">
         <view class="goods-card" wx:for="{{hotGoods}}" wx:key="id">
-            <navigator url="/pages/goods/goods?id={{item.id}}">
+            <navigator url="/pages/goods/goods?id={{item.id}}" class="goods-link">
 
                 <view class="goods-img-wrap">
                     <image class="goods-img" src="{{item.picUrl}}" mode="aspectFill"></image>
