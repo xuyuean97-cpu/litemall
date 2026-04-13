@@ -100,7 +100,7 @@ Page({
         const categoryList = res.data.categoryList || [];
         
         // 查找"按尺寸"分类
-        const sizeParent = categoryList.find(c => c.name.includes('尺寸'));
+        const sizeParent = categoryList.find(c => c.name && c.name.includes('尺寸'));
         let sizeCategories = [{ id: 0, name: '全部' }];
         if (sizeParent && sizeParent.subCategoryList) {
           sizeCategories = sizeCategories.concat(sizeParent.subCategoryList.map(sub => ({
@@ -110,7 +110,7 @@ Page({
         }
 
         // 查找"面板类型"分类
-        const panelParent = categoryList.find(c => c.name.includes('面板'));
+        const panelParent = categoryList.find(c => c.name && c.name.includes('面板'));
         let panelCategories = [{ id: 0, name: '全部' }];
         if (panelParent && panelParent.subCategoryList) {
           panelCategories = panelCategories.concat(panelParent.subCategoryList.map(sub => ({
@@ -124,6 +124,8 @@ Page({
           panelCategories
         });
       }
+    }).catch(err => {
+      console.error('getCatalogData error:', err);
     });
   },
 
@@ -190,6 +192,9 @@ Page({
       } else {
         this.setData({ sizeGoodsLoading: false });
       }
+    }).catch(err => {
+      console.error('getSizeGoods error:', err);
+      this.setData({ sizeGoodsLoading: false });
     });
   },
 
@@ -261,6 +266,9 @@ Page({
       } else {
         this.setData({ panelGoodsLoading: false });
       }
+    }).catch(err => {
+      console.error('getPanelGoods error:', err);
+      this.setData({ panelGoodsLoading: false });
     });
   },
 
@@ -316,7 +324,7 @@ Page({
       this.getIndexData(),
       this.getCatalogData()
     ]).then(() => {
-      // 如果有选中分类，重新加载
+      // 如果有选中分类，��新加载
       if (this.data.currentSizeId > 0) {
         this.getSizeGoods(true);
       }
