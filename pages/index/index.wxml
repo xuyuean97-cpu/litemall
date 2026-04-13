@@ -1,0 +1,310 @@
+<!-- index.wxml - 笔记本屏幕物料销售首页 -->
+<view class="container">
+
+<!-- 搜索栏 -->
+<view class="search-header">
+    <navigator url="/pages/search/search" class="search-input">
+        <van-icon name="search" size="18px" color="#999" />
+        <text class="search-txt">输入屏幕型号，如 NV156FHM-N61</text>
+    </navigator>
+</view>
+
+<!-- 轮播图 -->
+<swiper class="banner" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff" autoplay interval="4000" duration="500" circular>
+    <swiper-item wx:for="{{banner}}" wx:key="id">
+        <navigator wx:if="{{item.link > 0}}" url="/pages/goods/goods?id={{item.link}}">
+            <image src="{{item.url}}" mode="aspectFill"></image>
+        </navigator>
+        <image wx:else src="{{item.url}}" mode="aspectFill"></image>
+    </swiper-item>
+</swiper>
+
+<!-- 品牌 -->
+<view class="brand-nav" wx:if="{{screenBrands.length > 0}}">
+    <view class="brand-title">
+        <text class="title-txt">屏幕品牌</text>
+        <navigator url="/pages/brand/brand" class="more-link">
+            <text>全部</text>
+            <van-icon name="arrow" size="12px" />
+        </navigator>
+    </view>
+
+    <scroll-view scroll-x class="brand-scroll" enhanced show-scrollbar="{{false}}">
+        <view class="brand-list">
+            <navigator class="brand-item"
+                       wx:for="{{screenBrands}}"
+                       wx:key="id"
+                       url="/pages/brandDetail/brandDetail?id={{item.id}}">
+                
+                <view class="brand-icon" style="background-color: {{item.bgColor}}">
+                  <image wx:if="{{item.picUrl}}" src="{{item.picUrl}}" mode="aspectFit" />
+                    <text wx:else class="brand-abbr">{{item.abbr}}</text>
+                </view>
+
+                <text class="brand-name">{{item.name}}</text>
+            </navigator>
+        </view>
+    </scroll-view>
+</view>
+
+<!-- 尺寸筛选 -->
+<view class="quick-filter" wx:if="{{sizes.length > 0}}">
+    <view class="filter-title">按尺寸选购</view>
+    <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
+        <view class="filter-tags">
+            <view class="filter-tag {{currentSize === item ? 'active' : ''}}"
+                  wx:for="{{sizes}}"
+                  wx:key="*this"
+                  bindtap="onSizeFilter"
+                  data-size="{{item}}">
+                {{item}}
+            </view>
+        </view>
+    </scroll-view>
+</view>
+
+<!-- 面板筛选 -->
+<view class="quick-filter" wx:if="{{panelTypes.length > 0}}">
+    <view class="filter-title">面板类型</view>
+    <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
+        <view class="filter-tags">
+            <view class="filter-tag {{currentPanelType === item ? 'active' : ''}}"
+                  wx:for="{{panelTypes}}"
+                  wx:key="*this"
+                  bindtap="onPanelTypeFilter"
+                  data-type="{{item}}">
+                {{item}}
+            </view>
+        </view>
+    </scroll-view>
+</view>
+
+<!-- 阶梯报价 -->
+<view class="price-tier-banner">
+    <view class="tier-header">
+        <van-icon name="gold-coin-o" size="18px" color="#f5a623" />
+        <text class="tier-title">认证会员购买更优惠</text>
+    </view>
+
+    <view class="tier-content">
+        <view class="tier-item">
+            <text class="tier-qty">普通用户</text>
+            <text class="tier-label">零售价</text>
+        </view>
+
+        <view class="tier-divider"></view>
+
+        <view class="tier-item">
+            <text class="tier-qty">认证会员</text>
+            <text class="tier-discount">批发价</text>
+        </view>
+
+        <view class="tier-divider"></view>
+
+        <view class="tier-item">
+            <text class="tier-qty">购买10次以上</text>
+            <text class="tier-discount">9折</text>
+        </view>
+    </view>
+</view>
+<!-- ⭐ 筛选商品列表 -->
+<view class="section" wx:if="{{isFiltering}}">
+
+<view class="section-header">
+    <view class="header-left">
+        <text class="header-title">筛选结果</text>
+    </view>
+</view>
+
+<view class="goods-list">
+
+    <view class="goods-card" wx:for="{{goodsList}}" wx:key="id">
+        <navigator url="/pages/goods/goods?id={{item.id}}">
+
+            <view class="goods-img-wrap">
+                <image class="goods-img" src="{{item.picUrl}}" mode="aspectFill"></image>
+            </view>
+
+            <view class="goods-info">
+                <text class="goods-model">{{item.model || item.name}}</text>
+
+                <text class="goods-price">¥{{item.retailPrice}}</text>
+            </view>
+
+        </navigator>
+    </view>
+
+</view>
+
+<!-- 加载状态 -->
+<view class="loading" wx:if="{{loading}}">
+    加载中...
+</view>
+
+<view class="no-more" wx:if="{{finished}}">
+    没有更多了
+</view>
+
+</view>
+<!-- 热销商品 -->
+<view class="section" wx:if="{{!isFiltering && hotGoods.length > 0}}">
+    <view class="section-header">
+        <view class="header-left">
+            <view class="header-icon hot-icon"></view>
+            <text class="header-title">热销型号</text>
+        </view>
+
+        <navigator url="/pages/hotGoods/hotGoods" class="header-more">
+            <text>查看更多</text>
+            <van-icon name="arrow" size="12px" />
+        </navigator>
+    </view>
+
+    <view class="goods-list">
+        <view class="goods-card" wx:for="{{hotGoods}}" wx:key="id">
+            <navigator url="/pages/goods/goods?id={{item.id}}">
+
+                <view class="goods-img-wrap">
+                    <image class="goods-img" src="{{item.picUrl}}" mode="aspectFill"></image>
+                    <view class="stock-tag {{item.stock > 0 ? 'in-stock' : 'out-stock'}}">
+                        {{item.stock > 0 ? '现货' : '缺货'}}
+                    </view>
+                </view>
+
+                <view class="goods-info">
+
+                    <text class="goods-model">{{item.model || item.name}}</text>
+
+                    <!-- ✅ 真实规格 -->
+                    <view class="goods-spec">
+
+                        <block wx:if="{{item.size}}">
+                            <text class="spec-item">{{item.size}}寸</text>
+                        </block>
+
+                        <block wx:if="{{item.resolution}}">
+                            <text class="spec-divider">|</text>
+                            <text class="spec-item">{{item.resolution}}</text>
+                        </block>
+
+                        <block wx:if="{{item.panelType}}">
+                            <text class="spec-divider">|</text>
+                            <text class="spec-item">{{item.panelType}}</text>
+                        </block>
+
+                    </view>
+
+                    <text class="goods-compatible" wx:if="{{item.compatible}}">
+                        适配: {{item.compatible}}
+                    </text>
+
+                    <view class="goods-price-row">
+                        <text class="goods-price">¥{{item.retailPrice}}</text>
+                        <text class="tier-hint" wx:if="{{item.hasTierPrice}}">10+更优惠</text>
+                    </view>
+
+                </view>
+            </navigator>
+        </view>
+    </view>
+</view>
+
+<!-- 新品 -->
+<view class="section" wx:if="{{newGoods.length > 0}}">
+    <view class="section-header">
+        <view class="header-left">
+            <view class="header-icon new-icon"></view>
+            <text class="header-title">新到货物料</text>
+        </view>
+
+        <navigator url="/pages/newGoods/newGoods" class="header-more">
+            <text>查看更多</text>
+            <van-icon name="arrow" size="12px" />
+        </navigator>
+    </view>
+
+    <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}">
+        <view class="goods-scroll-list">
+
+            <view class="goods-scroll-item" wx:for="{{newGoods}}" wx:key="id">
+                <navigator url="/pages/goods/goods?id={{item.id}}">
+                    <image class="scroll-img" src="{{item.picUrl}}" mode="aspectFill"></image>
+
+                    <text class="scroll-model">{{item.model || item.name}}</text>
+
+                    <!-- ✅ 新品规格 -->
+                    <text class="scroll-spec">
+                        <block wx:if="{{item.size}}">
+                            {{item.size}}寸
+                        </block>
+                        <block wx:if="{{item.panelType}}">
+                            {{item.panelType}}
+                        </block>
+                    </text>
+
+                    <text class="scroll-price">¥{{item.retailPrice}}</text>
+                </navigator>
+            </view>
+
+        </view>
+    </scroll-view>
+</view>
+
+<!-- 楼层 -->
+<view class="brand-floor" wx:for="{{floorGoods}}" wx:key="id" wx:if="{{item.goodsList.length > 0}}">
+
+    <view class="floor-header">
+        <view class="floor-brand">
+            <text class="floor-brand-name">{{item.name}}</text>
+            <text class="floor-brand-count">{{item.goodsList.length}}款</text>
+        </view>
+
+        <navigator url="/pages/category/category?id={{item.id}}" class="floor-more">
+            <text>更多</text>
+            <van-icon name="arrow" size="12px" />
+        </navigator>
+    </view>
+
+    <view class="floor-goods">
+        <view class="floor-goods-item" wx:for="{{item.goodsList}}" wx:key="id">
+            <navigator url="/pages/goods/goods?id={{item.id}}">
+
+                <image class="floor-goods-img" src="{{item.picUrl}}" mode="aspectFill"></image>
+
+                <view class="floor-goods-info">
+                    <text class="floor-goods-model">{{item.model || item.name}}</text>
+
+                    <text class="floor-goods-spec">
+                        <block wx:if="{{item.size}}">
+                            {{item.size}}寸
+                        </block>
+
+                        <block wx:if="{{item.resolution}}">
+                            | {{item.resolution}}
+                        </block>
+                    </text>
+
+                    <text class="floor-goods-price">¥{{item.retailPrice}}</text>
+                </view>
+
+            </navigator>
+        </view>
+    </view>
+
+</view>
+
+<!-- 缺货登记 -->
+<view class="shortage-entry">
+    <navigator url="/pages/shortage/shortage" class="shortage-link">
+        <van-icon name="bell-o" size="20px" color="#1a73e8" />
+        <view class="shortage-text">
+            <text class="shortage-title">找不到需要的型号？</text>
+            <text class="shortage-desc">提交缺货登记，到货通知</text>
+        </view>
+        <van-icon name="arrow" size="14px" color="#999" />
+    </navigator>
+</view>
+
+<view class="safe-bottom"></view>
+
+</view>
