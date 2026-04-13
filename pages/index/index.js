@@ -12,6 +12,18 @@ Page({
     currentSize: '全部',
     currentPanelType: '全部',
 
+    // 尺寸筛选结果
+    sizeFilteredGoods: [],
+    sizeFilterPage: 1,
+    sizeFilterLoading: false,
+    sizeFilterFinished: false,
+
+    // 面板类型筛选结果
+    panelFilteredGoods: [],
+    panelFilterPage: 1,
+    panelFilterLoading: false,
+    panelFilterFinished: false,
+
     // 品牌
     screenBrands: [],
 
@@ -173,12 +185,53 @@ Page({
   
     this.setData({
       currentSize: size,
-      page: 1,
-      goodsList: [],
-      isFiltering: size !== '全部'
+      sizeFilterPage: 1,
+      sizeFilteredGoods: [],
+      sizeFilterFinished: false
     });
   
-    this.getGoodsList(true);
+    if (size !== '全部') {
+      this.getSizeFilteredGoods(true);
+    }
+  },
+
+  /**
+   * 获取尺寸筛选商品
+   */
+  getSizeFilteredGoods(reset = true) {
+    if (this.data.sizeFilterLoading) return;
+    
+    const { currentSize, sizeFilterPage, limit } = this.data;
+    
+    this.setData({ sizeFilterLoading: true });
+
+    util.request(api.GoodsList, {
+      page: sizeFilterPage,
+      limit,
+      size: currentSize
+    }).then(res => {
+      if (res.errno === 0) {
+        let list = res.data.list || [];
+        this.setData({
+          sizeFilteredGoods: reset ? list : this.data.sizeFilteredGoods.concat(list),
+          sizeFilterFinished: list.length < limit,
+          sizeFilterLoading: false
+        });
+      }
+    });
+  },
+
+  /**
+   * 加载更多尺寸筛选商品
+   */
+  loadMoreSizeGoods() {
+    if (this.data.sizeFilterFinished || this.data.sizeFilterLoading) return;
+    
+    this.setData({
+      sizeFilterPage: this.data.sizeFilterPage + 1
+    });
+    
+    this.getSizeFilteredGoods(false);
   },
 
   /**
@@ -188,14 +241,54 @@ Page({
     const type = e.currentTarget.dataset.type;
 
     this.setData({
-      currentPanelType: type
+      currentPanelType: type,
+      panelFilterPage: 1,
+      panelFilteredGoods: [],
+      panelFilterFinished: false
     });
 
     if (type !== '全部') {
-      wx.navigateTo({
-        url: '/pages/search/search?keyword=' + encodeURIComponent(type)
-      });
+      this.getPanelFilteredGoods(true);
     }
+  },
+
+  /**
+   * 获取面板类型筛选商品
+   */
+  getPanelFilteredGoods(reset = true) {
+    if (this.data.panelFilterLoading) return;
+    
+    const { currentPanelType, panelFilterPage, limit } = this.data;
+    
+    this.setData({ panelFilterLoading: true });
+
+    util.request(api.GoodsList, {
+      page: panelFilterPage,
+      limit,
+      panelType: currentPanelType
+    }).then(res => {
+      if (res.errno === 0) {
+        let list = res.data.list || [];
+        this.setData({
+          panelFilteredGoods: reset ? list : this.data.panelFilteredGoods.concat(list),
+          panelFilterFinished: list.length < limit,
+          panelFilterLoading: false
+        });
+      }
+    });
+  },
+
+  /**
+   * 加载更多面板类型筛选商品
+   */
+  loadMorePanelGoods() {
+    if (this.data.panelFilterFinished || this.data.panelFilterLoading) return;
+    
+    this.setData({
+      panelFilterPage: this.data.panelFilterPage + 1
+    });
+    
+    this.getPanelFilteredGoods(false);
   },
 
   /**
