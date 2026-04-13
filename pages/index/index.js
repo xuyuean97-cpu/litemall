@@ -42,6 +42,9 @@ Page({
     this.getIndexData();
     this.getCatalogData();
     this.getGoodsList();
+    // 初始加载筛选结果（全部商品）
+    this.getSizeFilteredGoods(true);
+    this.getPanelFilteredGoods(true);
   },
   onReachBottom() {
     if (this.data.finished || this.data.loading) return;
@@ -190,9 +193,7 @@ Page({
       sizeFilterFinished: false
     });
   
-    if (size !== '全部') {
-      this.getSizeFilteredGoods(true);
-    }
+    this.getSizeFilteredGoods(true);
   },
 
   /**
@@ -205,11 +206,17 @@ Page({
     
     this.setData({ sizeFilterLoading: true });
 
-    util.request(api.GoodsList, {
+    let params = {
       page: sizeFilterPage,
-      limit,
-      size: currentSize
-    }).then(res => {
+      limit
+    };
+
+    // 只有非"全部"时才传递筛选参数
+    if (currentSize !== '全部') {
+      params.size = currentSize;
+    }
+
+    util.request(api.GoodsList, params).then(res => {
       if (res.errno === 0) {
         let list = res.data.list || [];
         this.setData({
@@ -247,9 +254,7 @@ Page({
       panelFilterFinished: false
     });
 
-    if (type !== '全部') {
-      this.getPanelFilteredGoods(true);
-    }
+    this.getPanelFilteredGoods(true);
   },
 
   /**
@@ -262,11 +267,17 @@ Page({
     
     this.setData({ panelFilterLoading: true });
 
-    util.request(api.GoodsList, {
+    let params = {
       page: panelFilterPage,
-      limit,
-      panelType: currentPanelType
-    }).then(res => {
+      limit
+    };
+
+    // 只有非"全部"时才传递筛选参数
+    if (currentPanelType !== '全部') {
+      params.panelType = currentPanelType;
+    }
+
+    util.request(api.GoodsList, params).then(res => {
       if (res.errno === 0) {
         let list = res.data.list || [];
         this.setData({

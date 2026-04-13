@@ -63,9 +63,9 @@
     </scroll-view>
 
     <!-- 尺寸筛选结果 -->
-    <view class="filter-result" wx:if="{{currentSize !== '全部' && sizeFilteredGoods.length > 0}}">
+    <view class="filter-result" wx:if="{{sizeFilteredGoods.length > 0}}">
         <view class="filter-result-header">
-            <text class="result-title">{{currentSize}} 筛选结果</text>
+            <text class="result-title">{{currentSize === '全部' ? '全部商品' : currentSize + ' 筛选结果'}}</text>
             <text class="result-count">共{{sizeFilteredGoods.length}}件</text>
         </view>
         <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}">
@@ -92,11 +92,11 @@
         </view>
     </view>
     <!-- 无结果提示 -->
-    <view class="no-result" wx:if="{{currentSize !== '全部' && sizeFilteredGoods.length === 0 && !sizeFilterLoading}}">
-        <text>暂无 {{currentSize}} 的商品</text>
+    <view class="no-result" wx:if="{{sizeFilteredGoods.length === 0 && !sizeFilterLoading}}">
+        <text>{{currentSize === '全部' ? '暂无商品' : '暂无 ' + currentSize + ' 的商品'}}</text>
     </view>
     <!-- 加载中 -->
-    <view class="filter-loading" wx:if="{{currentSize !== '全部' && sizeFilterLoading && sizeFilteredGoods.length === 0}}">
+    <view class="filter-loading" wx:if="{{sizeFilterLoading && sizeFilteredGoods.length === 0}}">
         <text>加载中...</text>
     </view>
 </view>
@@ -117,9 +117,9 @@
     </scroll-view>
 
     <!-- 面板类型筛选结果 -->
-    <view class="filter-result" wx:if="{{currentPanelType !== '全部' && panelFilteredGoods.length > 0}}">
+    <view class="filter-result" wx:if="{{panelFilteredGoods.length > 0}}">
         <view class="filter-result-header">
-            <text class="result-title">{{currentPanelType}} 筛选结果</text>
+            <text class="result-title">{{currentPanelType === '全部' ? '全部商品' : currentPanelType + ' 筛选结果'}}</text>
             <text class="result-count">共{{panelFilteredGoods.length}}件</text>
         </view>
         <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}">
@@ -146,16 +146,16 @@
         </view>
     </view>
     <!-- 无结果提示 -->
-    <view class="no-result" wx:if="{{currentPanelType !== '全部' && panelFilteredGoods.length === 0 && !panelFilterLoading}}">
-        <text>暂无 {{currentPanelType}} 的商品</text>
+    <view class="no-result" wx:if="{{panelFilteredGoods.length === 0 && !panelFilterLoading}}">
+        <text>{{currentPanelType === '全部' ? '暂无商品' : '暂无 ' + currentPanelType + ' 的商品'}}</text>
     </view>
     <!-- 加载中 -->
-    <view class="filter-loading" wx:if="{{currentPanelType !== '全部' && panelFilterLoading && panelFilteredGoods.length === 0}}">
+    <view class="filter-loading" wx:if="{{panelFilterLoading && panelFilteredGoods.length === 0}}">
         <text>加载中...</text>
     </view>
 </view>
 
-<!-- 阶梯报价 -->
+<!-- 阶梯���价 -->
 <view class="price-tier-banner">
     <view class="tier-header">
         <van-icon name="gold-coin-o" size="18px" color="#f5a623" />
