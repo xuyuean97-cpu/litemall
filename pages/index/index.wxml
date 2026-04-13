@@ -47,115 +47,117 @@
     </scroll-view>
 </view>
 
-<!-- 尺寸筛选 -->
-<view class="quick-filter" wx:if="{{sizes.length > 0}}">
+<!-- 按尺寸选购 -->
+<view class="quick-filter" wx:if="{{sizeCategories.length > 1}}">
     <view class="filter-title">按尺寸选购</view>
     <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
         <view class="filter-tags">
-            <view class="filter-tag {{currentSize === item ? 'active' : ''}}"
-                  wx:for="{{sizes}}"
-                  wx:key="*this"
+            <view class="filter-tag {{currentSizeId === item.id ? 'active' : ''}}"
+                  wx:for="{{sizeCategories}}"
+                  wx:key="id"
                   bindtap="onSizeFilter"
-                  data-size="{{item}}">
-                {{item}}
+                  data-id="{{item.id}}"
+                  data-name="{{item.name}}">
+                {{item.name}}
             </view>
         </view>
     </scroll-view>
 
-    <!-- 尺寸筛选结果 -->
-    <view class="filter-result" wx:if="{{sizeFilteredGoods.length > 0}}">
+    <!-- 尺寸筛选结果（只有选中具体分类时才显示） -->
+    <view class="filter-result" wx:if="{{currentSizeId > 0}}">
         <view class="filter-result-header">
-            <text class="result-title">{{currentSize === '全部' ? '全部商品' : currentSize + ' 筛选结果'}}</text>
-            <text class="result-count">共{{sizeFilteredGoods.length}}件</text>
+            <text class="result-title">{{currentSizeName}}</text>
+            <view class="result-more" bindtap="viewMoreSizeGoods">
+                <text>查看更多</text>
+                <van-icon name="arrow" size="12px" />
+            </view>
         </view>
-        <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}">
+
+        <!-- 加载中 -->
+        <view class="filter-loading" wx:if="{{sizeGoodsLoading && sizeGoodsList.length === 0}}">
+            <text>加载中...</text>
+        </view>
+
+        <!-- 商品列表 -->
+        <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}" wx:if="{{sizeGoodsList.length > 0}}">
             <view class="goods-scroll-list">
-                <view class="goods-scroll-item" wx:for="{{sizeFilteredGoods}}" wx:key="id">
+                <view class="goods-scroll-item" wx:for="{{sizeGoodsList}}" wx:key="id">
                     <navigator url="/pages/goods/goods?id={{item.id}}">
                         <image class="scroll-img" src="{{item.picUrl}}" mode="aspectFill"></image>
                         <text class="scroll-model">{{item.model || item.name}}</text>
-                        <text class="scroll-spec">
-                            <block wx:if="{{item.size}}">{{item.size}}寸</block>
-                            <block wx:if="{{item.panelType}}"> {{item.panelType}}</block>
-                        </text>
                         <text class="scroll-price">¥{{item.retailPrice}}</text>
                     </navigator>
                 </view>
-                <!-- 加载更多按钮 -->
-                <view class="load-more-btn" wx:if="{{!sizeFilterFinished}}" bindtap="loadMoreSizeGoods">
-                    <text>{{sizeFilterLoading ? '加载中...' : '加载更多'}}</text>
+                <!-- 加载更多 -->
+                <view class="load-more-btn" wx:if="{{!sizeGoodsFinished}}" bindtap="loadMoreSizeGoods">
+                    <text>{{sizeGoodsLoading ? '加载中...' : '更多'}}</text>
                 </view>
             </view>
         </scroll-view>
-        <view class="no-more-hint" wx:if="{{sizeFilterFinished && sizeFilteredGoods.length > 0}}">
-            <text>已加载全部</text>
+
+        <!-- 无结果 -->
+        <view class="no-result" wx:if="{{sizeGoodsList.length === 0 && !sizeGoodsLoading}}">
+            <text>暂无 {{currentSizeName}} 的商品</text>
         </view>
-    </view>
-    <!-- 无结果提示 -->
-    <view class="no-result" wx:if="{{sizeFilteredGoods.length === 0 && !sizeFilterLoading}}">
-        <text>{{currentSize === '全部' ? '暂无商品' : '暂无 ' + currentSize + ' 的商品'}}</text>
-    </view>
-    <!-- 加载中 -->
-    <view class="filter-loading" wx:if="{{sizeFilterLoading && sizeFilteredGoods.length === 0}}">
-        <text>加载中...</text>
     </view>
 </view>
 
-<!-- 面板筛选 -->
-<view class="quick-filter" wx:if="{{panelTypes.length > 0}}">
+<!-- 面板类型 -->
+<view class="quick-filter" wx:if="{{panelCategories.length > 1}}">
     <view class="filter-title">面板类型</view>
     <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
         <view class="filter-tags">
-            <view class="filter-tag {{currentPanelType === item ? 'active' : ''}}"
-                  wx:for="{{panelTypes}}"
-                  wx:key="*this"
+            <view class="filter-tag {{currentPanelId === item.id ? 'active' : ''}}"
+                  wx:for="{{panelCategories}}"
+                  wx:key="id"
                   bindtap="onPanelTypeFilter"
-                  data-type="{{item}}">
-                {{item}}
+                  data-id="{{item.id}}"
+                  data-name="{{item.name}}">
+                {{item.name}}
             </view>
         </view>
     </scroll-view>
 
-    <!-- 面板类型筛选结果 -->
-    <view class="filter-result" wx:if="{{panelFilteredGoods.length > 0}}">
+    <!-- 面板筛选结果（只有选中具体分类时才显示） -->
+    <view class="filter-result" wx:if="{{currentPanelId > 0}}">
         <view class="filter-result-header">
-            <text class="result-title">{{currentPanelType === '全部' ? '全部商品' : currentPanelType + ' 筛选结果'}}</text>
-            <text class="result-count">共{{panelFilteredGoods.length}}件</text>
+            <text class="result-title">{{currentPanelName}}</text>
+            <view class="result-more" bindtap="viewMorePanelGoods">
+                <text>查看更多</text>
+                <van-icon name="arrow" size="12px" />
+            </view>
         </view>
-        <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}">
+
+        <!-- 加载中 -->
+        <view class="filter-loading" wx:if="{{panelGoodsLoading && panelGoodsList.length === 0}}">
+            <text>加载中...</text>
+        </view>
+
+        <!-- 商品列表 -->
+        <scroll-view scroll-x class="goods-scroll" enhanced show-scrollbar="{{false}}" wx:if="{{panelGoodsList.length > 0}}">
             <view class="goods-scroll-list">
-                <view class="goods-scroll-item" wx:for="{{panelFilteredGoods}}" wx:key="id">
+                <view class="goods-scroll-item" wx:for="{{panelGoodsList}}" wx:key="id">
                     <navigator url="/pages/goods/goods?id={{item.id}}">
                         <image class="scroll-img" src="{{item.picUrl}}" mode="aspectFill"></image>
                         <text class="scroll-model">{{item.model || item.name}}</text>
-                        <text class="scroll-spec">
-                            <block wx:if="{{item.size}}">{{item.size}}寸</block>
-                            <block wx:if="{{item.panelType}}"> {{item.panelType}}</block>
-                        </text>
                         <text class="scroll-price">¥{{item.retailPrice}}</text>
                     </navigator>
                 </view>
-                <!-- 加载更多按钮 -->
-                <view class="load-more-btn" wx:if="{{!panelFilterFinished}}" bindtap="loadMorePanelGoods">
-                    <text>{{panelFilterLoading ? '加载中...' : '加载更多'}}</text>
+                <!-- 加载更多 -->
+                <view class="load-more-btn" wx:if="{{!panelGoodsFinished}}" bindtap="loadMorePanelGoods">
+                    <text>{{panelGoodsLoading ? '加载中...' : '更多'}}</text>
                 </view>
             </view>
         </scroll-view>
-        <view class="no-more-hint" wx:if="{{panelFilterFinished && panelFilteredGoods.length > 0}}">
-            <text>已加载全部</text>
+
+        <!-- 无结果 -->
+        <view class="no-result" wx:if="{{panelGoodsList.length === 0 && !panelGoodsLoading}}">
+            <text>暂无 {{currentPanelName}} 的商品</text>
         </view>
-    </view>
-    <!-- 无结果提示 -->
-    <view class="no-result" wx:if="{{panelFilteredGoods.length === 0 && !panelFilterLoading}}">
-        <text>{{currentPanelType === '全部' ? '暂无商品' : '暂无 ' + currentPanelType + ' 的商品'}}</text>
-    </view>
-    <!-- 加载中 -->
-    <view class="filter-loading" wx:if="{{panelFilterLoading && panelFilteredGoods.length === 0}}">
-        <text>加载中...</text>
     </view>
 </view>
 
-<!-- 阶梯���价 -->
+<!-- 阶梯定价 -->
 <view class="price-tier-banner">
     <view class="tier-header">
         <van-icon name="gold-coin-o" size="18px" color="#f5a623" />
@@ -185,7 +187,7 @@
 </view>
 
 <!-- 热销商品 -->
-<view class="section" wx:if="{{!isFiltering && hotGoods.length > 0}}">
+<view class="section" wx:if="{{hotGoods.length > 0}}">
     <view class="section-header">
         <view class="header-left">
             <view class="header-icon hot-icon"></view>
@@ -213,7 +215,7 @@
 
                     <text class="goods-model">{{item.model || item.name}}</text>
 
-                    <!-- ✅ 真实规格 -->
+                    <!-- 真实规格 -->
                     <view class="goods-spec">
 
                         <block wx:if="{{item.size}}">
@@ -270,7 +272,7 @@
 
                     <text class="scroll-model">{{item.model || item.name}}</text>
 
-                    <!-- ✅ 新品规格 -->
+                    <!-- 新品规格 -->
                     <text class="scroll-spec">
                         <block wx:if="{{item.size}}">
                             {{item.size}}寸
