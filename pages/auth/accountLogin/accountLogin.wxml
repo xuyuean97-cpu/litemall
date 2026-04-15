@@ -1,29 +1,77 @@
 <view class="container">
-    <view class="form-box">
-
-    	<view class="form-item">
-    		<input class="username" value="{{username}}" bindinput="bindUsernameInput" placeholder="账号"/>
-        <van-icon name="close" wx:if="{{ username.length > 0 }}" id="clear-username" class="clear" catchtap="clearInput"/>
-    	</view>
-
-    	<view class="form-item">
-    		<input class="password" value="{{password}}" password bindinput="bindPasswordInput" placeholder="密码"/>
-        <van-icon class="clear" id="clear-password" wx:if="{{ password.length > 0 }}" name="close" catchtap="clearInput"/>      
-    	</view>
-
-		 <!-- <view class="form-item-code" wx-if="{{loginErrorCount >= 3}}">
-			<view class="form-item code-item">
-				<input class="code" value="{{code}}" bindinput="bindCodeInput" placeholder="验证码"/>
-        <van-icon class="clear" id="clear-code" wx:if="{{ code.length > 0 }}" name="close" catchtap="clearInput"/>        
-			</view>
-			<image class="code-img" src="captcha.png"></image>
-		</view>  -->
-
-    <button type="primary" class="login-btn" bindtap="accountLogin">账号登录</button>
-
-     <view class="form-item-text">
-      <navigator url="/pages/auth/register/register" class="register">注册账号</navigator>
-			<navigator url="/pages/auth/reset/reset" class="reset">忘记密码</navigator>
-    </view> 
+  <!-- 顶部标题区域 -->
+  <view class="header">
+    <view class="header-icon">
+      <van-icon name="manager" size="36px" color="#1a73e8" />
     </view>
+    <text class="header-title">账号登录</text>
+    <text class="header-desc">使用您的账号密码登录</text>
+  </view>
+
+  <!-- 登录表单卡片 -->
+  <view class="form-card">
+    <view class="form-item">
+      <view class="input-wrapper">
+        <van-icon name="user-o" size="20px" color="#999" />
+        <input 
+          class="input-field" 
+          value="{{username}}" 
+          bindinput="bindUsernameInput" 
+          placeholder="请输入账号"
+          placeholder-class="placeholder"
+        />
+        <van-icon 
+          wx:if="{{ username.length > 0 }}" 
+          name="clear" 
+          size="18px" 
+          color="#ccc"
+          id="clear-username" 
+          catchtap="clearInput"
+        />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <view class="input-wrapper">
+        <van-icon name="lock" size="20px" color="#999" />
+        <input 
+          class="input-field" 
+          value="{{password}}" 
+          password 
+          bindinput="bindPasswordInput" 
+          placeholder="请输入密码"
+          placeholder-class="placeholder"
+        />
+        <van-icon 
+          wx:if="{{ password.length > 0 }}" 
+          name="clear" 
+          size="18px" 
+          color="#ccc"
+          id="clear-password" 
+          catchtap="clearInput"
+        />
+      </view>
+    </view>
+
+    <button class="login-btn" bindtap="accountLogin">
+      <text>登 录</text>
+    </button>
+
+    <view class="form-links">
+      <navigator url="/pages/auth/register/register" class="link link-register">
+        <van-icon name="add-o" size="14px" color="#1a73e8" />
+        <text>注册账号</text>
+      </navigator>
+      <navigator url="/pages/auth/reset/reset" class="link link-reset">
+        <van-icon name="question-o" size="14px" color="#999" />
+        <text>忘记密码</text>
+      </navigator>
+    </view>
+  </view>
+
+  <!-- 安全提示 -->
+  <view class="security-tips">
+    <van-icon name="shield-o" size="14px" color="#07c160" />
+    <text class="tips-text">您的账号信息将被安全加密保护</text>
+  </view>
 </view>

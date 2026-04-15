@@ -118,8 +118,9 @@
 
 .goods-info .retailPrice {
   padding-left: 5%;
-  font-size: 30rpx;
-  color: #a78845;
+  font-size: 34rpx;
+  color: #1a73e8;
+  font-weight: 600;
 }
 
 .goods-info .brand {
@@ -595,19 +596,24 @@
   bottom: 0;
   z-index: 10;
   width: 750rpx;
-  height: 100rpx;
+  height: 110rpx;
   display: flex;
+  align-items: center;
   background: #fff;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
+  padding: 0 16rpx;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .bottom-btn .l {
-  float: left;
-  height: 100rpx;
-  width: 90rpx;
-  border: 1px solid #f4f4f4;
+  height: 80rpx;
+  width: 80rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  margin-right: 12rpx;
 }
 
 .bottom-btn .l .l-contact {
@@ -617,9 +623,10 @@
   align-items: center;
   flex-wrap: wrap;
   line-height: 1;
-  background: #fff;
+  background: transparent;
   border-radius: 0;
   height: 55rpx;
+  padding: 0;
 }
  
 .bottom-btn .l .l-contact:after {
@@ -628,13 +635,12 @@
 }
 
 .bottom-btn .l.l-collect {
-  border-right: none;
-  border-left: none;
   text-align: center;
 }
 
 .bottom-btn .l.l-collect .icon {
   font-size: 44rpx;
+  color: #1a73e8;
 }
 
 .bottom-btn .l.l-kefu {
@@ -650,18 +656,19 @@
 }
 
 .bottom-btn .l.l-cart .cart-count {
-  height: 28rpx;
-  width: 28rpx;
+  height: 32rpx;
+  min-width: 32rpx;
   z-index: 10;
   position: absolute;
-  top: 0;
-  right: 0;
-  background: #b4282d;
+  top: -6rpx;
+  right: -6rpx;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
   text-align: center;
-  font-size: 18rpx;
+  font-size: 20rpx;
   color: #fff;
-  line-height: 28rpx;
-  border-radius: 50%;
+  line-height: 32rpx;
+  border-radius: 16rpx;
+  padding: 0 6rpx;
 }
 
 .bottom-btn .l.l-cart .icon {
@@ -669,37 +676,45 @@
   top: 10rpx;
   left: 0;
   font-size: 44rpx;
+  color: #333;
 }
 
 .bottom-btn .c {
-  float: left;
-  background: #b4282d;
-  height: 100rpx;
-  line-height: 96rpx;
+  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+  height: 80rpx;
+  line-height: 80rpx;
   flex: 1;
   text-align: center;
   color: #fff;
+  font-size: 28rpx;
+  font-weight: 500;
+  border-radius: 40rpx;
+  margin-left: 8rpx;
 }
 
 .bottom-btn .r {
-  border: 1px solid #f48f18;
-  background: #f48f18;
-  float: left;
-  height: 100rpx;
-  line-height: 96rpx;
+  background: linear-gradient(135deg, #f9a825 0%, #f57f17 100%);
+  height: 80rpx;
+  line-height: 80rpx;
   flex: 1;
   text-align: center;
   color: #fff;
+  font-size: 28rpx;
+  font-weight: 500;
+  border-radius: 40rpx;
+  border: none;
 }
 
 .bottom-btn .n {
-  float: left;
-  background: #d5d8d8e7;
-  height: 100rpx;
-  line-height: 96rpx;
-  flex: 1;
+  background: #e0e0e0;
+  height: 80rpx;
+  line-height: 80rpx;
+  flex: 2;
   text-align: center;
-  color: rgb(37, 36, 36);
+  color: #666;
+  font-size: 28rpx;
+  border-radius: 40rpx;
+  margin-left: 8rpx;
 }
 @import "../../lib/wxParse/wxParse.wxss";
 
@@ -812,8 +827,9 @@
 }
 
 .spec-con .value.selected {
-  border: 1px solid #b4282d;
-  color: #b4282d;
+  border: 2rpx solid #1a73e8;
+  color: #1a73e8;
+  background: rgba(26, 115, 232, 0.05);
 }
 
 .number-item .selnum {
