@@ -36,7 +36,7 @@
     "compileWorklet": false,
     "enhance": false,
     "localPlugins": false,
-    "condition": false,
+    "condition": true,
     "swc": false,
     "disableSWC": true
   },
@@ -45,7 +45,9 @@
   "appid": "wx9bd8a37090834e5e",
   "projectname": "litemall-wx",
   "simulatorType": "wechat",
-  "simulatorPluginLibVersion": {},
+  "simulatorPluginLibVersion": {
+    "wxext14566970e7e9f62": "2.27.3"
+  },
   "condition": {
     "search": {
       "list": []
@@ -334,5 +336,6 @@
     "ignore": [],
     "include": []
   },
-  "editorSetting": {}
+  "editorSetting": {},
+  "projectArchitecture": "multiPlatform"
 }

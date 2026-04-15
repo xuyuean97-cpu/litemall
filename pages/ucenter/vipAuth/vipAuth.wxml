@@ -1,0 +1,100 @@
+<view class="container">
+  <!-- 顶部VIP卡片 -->
+  <view class="vip-card {{isVip ? 'vip-active' : ''}}">
+    <view class="vip-card-bg"></view>
+    <view class="vip-card-content">
+      <view class="vip-header">
+        <van-icon name="diamond-o" color="{{isVip ? '#D4AF37' : '#999'}}" size="36px" />
+        <text class="vip-title">{{isVip ? '尊贵会员' : '会员认证'}}</text>
+      </view>
+      <view class="vip-status">
+        <text class="status-text" wx:if="{{!isVip}}">您还不是认证会员</text>
+        <text class="status-text" wx:else>感谢您的支持</text>
+      </view>
+      <view class="vip-price" wx:if="{{!isVip}}">
+        <text class="price-label">认证费用</text>
+        <text class="price-value">1</text>
+        <text class="price-unit">元</text>
+      </view>
+      <view class="vip-date" wx:if="{{isVip}}">
+        <text class="date-label">认证时间：{{vipInfo.authTime}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 会员权益 -->
+  <view class="benefits-section">
+    <view class="section-title">
+      <van-icon name="star-o" color="#D4AF37" size="20px" />
+      <text class="title-text">会员专属权益</text>
+    </view>
+    <view class="benefits-list">
+      <view class="benefit-item">
+        <view class="benefit-icon">
+          <van-icon name="coupon-o" color="#D4AF37" size="24px" />
+        </view>
+        <view class="benefit-info">
+          <text class="benefit-title">专属优惠券</text>
+          <text class="benefit-desc">每月领取会员专属优惠券</text>
+        </view>
+      </view>
+      <view class="benefit-item">
+        <view class="benefit-icon">
+          <van-icon name="gift-o" color="#D4AF37" size="24px" />
+        </view>
+        <view class="benefit-info">
+          <text class="benefit-title">批发价</text>
+          <text class="benefit-desc">享受优质面板物料批发价</text>
+        </view>
+      </view>
+      <view class="benefit-item">
+        <view class="benefit-icon">
+          <van-icon name="service-o" color="#D4AF37" size="24px" />
+        </view>
+        <view class="benefit-info">
+          <text class="benefit-title">专属客服</text>
+          <text class="benefit-desc">7x24小时VIP专属客服通道</text>
+        </view>
+      </view>
+      <view class="benefit-item">
+        <view class="benefit-icon">
+          <van-icon name="logistics" color="#D4AF37" size="24px" />
+        </view>
+        <view class="benefit-info">
+          <text class="benefit-title">优先发货</text>
+          <text class="benefit-desc">订单优先处理，极速发货</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 认证说明 -->
+  <view class="notice-section">
+    <view class="section-title">
+      <van-icon name="info-o" color="#999" size="20px" />
+      <text class="title-text notice-title">认证说明</text>
+    </view>
+    <view class="notice-list">
+      <view class="notice-item">1. 会员认证费用为1元，一次认证永久有效</view>
+      <view class="notice-item">2. 认证成功后立即生效，享受全部会员权益</view>
+      <view class="notice-item">3. 认证费用不支持退款，请确认后再认证</view>
+      <view class="notice-item">4. 如有问题请联系客服咨询</view>
+    </view>
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <view class="btn-wrapper" wx:if="{{!isVip}}">
+      <view class="auth-btn" bindtap="startAuth">
+        <text class="btn-text">立即认证</text>
+        <text class="btn-price">1元</text>
+      </view>
+    </view>
+    <view class="btn-wrapper" wx:else>
+      <view class="auth-btn authed">
+        <van-icon name="passed" color="#fff" size="20px" />
+        <text class="btn-text">已认证会员</text>
+      </view>
+    </view>
+  </view>
+</view>

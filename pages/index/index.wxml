@@ -9,15 +9,45 @@
     </navigator>
 </view>
 
-<!-- 轮播图 -->
-<swiper class="banner" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff" autoplay interval="4000" duration="500" circular>
-    <swiper-item wx:for="{{banner}}" wx:key="id">
-        <navigator wx:if="{{item.link > 0}}" url="/pages/goods/goods?id={{item.link}}">
-            <image src="{{item.url}}" mode="aspectFill"></image>
-        </navigator>
-        <image wx:else src="{{item.url}}" mode="aspectFill"></image>
-    </swiper-item>
-</swiper>
+<!-- 顶部抬头 - 专业定位 -->
+<view class="hero-header">
+    <view class="hero-content">
+        <view class="hero-main">
+            <text class="hero-title">笔记本屏幕物料</text>
+            <text class="hero-subtitle">维修师傅专属采购平台</text>
+        </view>
+        <view class="hero-tags">
+            <view class="hero-tag">
+                <van-icon name="certificate" size="14px" color="#fff" />
+                <text>原厂品质</text>
+            </view>
+            <view class="hero-tag">
+                <van-icon name="logistics" size="14px" color="#fff" />
+                <text>闪电发货</text>
+            </view>
+            <view class="hero-tag">
+                <van-icon name="gold-coin-o" size="14px" color="#fff" />
+                <text>批发价格</text>
+            </view>
+        </view>
+    </view>
+    <view class="hero-stats">
+        <view class="stat-item">
+            <text class="stat-num">100+</text>
+            <text class="stat-label">屏幕型号</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+            <text class="stat-num">当日</text>
+            <text class="stat-label">发货时效</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+            <text class="stat-num">质保</text>
+            <text class="stat-label">售后无忧</text>
+        </view>
+    </view>
+</view>
 
 <!-- 品牌 -->
 <view class="brand-nav" wx:if="{{screenBrands.length > 0}}">
@@ -47,39 +77,147 @@
     </scroll-view>
 </view>
 
-<!-- 尺寸筛选 -->
-<view class="quick-filter" wx:if="{{sizes.length > 0}}">
-    <view class="filter-title">按尺寸选购</view>
-    <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
-        <view class="filter-tags">
-            <view class="filter-tag {{currentSize === item ? 'active' : ''}}"
-                  wx:for="{{sizes}}"
-                  wx:key="*this"
-                  bindtap="onSizeFilter"
-                  data-size="{{item}}">
-                {{item}}
-            </view>
+<!-- 筛选区域 -->
+<view class="filter-section">
+    <!-- 筛选面板头部：标题与收起/展开按钮 -->
+    <view class="filter-header">
+        <view class="filter-header-left">
+            <van-icon name="filter-o" size="16px" color="#333" />
+            <text class="filter-header-title">参数筛选</text>
         </view>
-    </scroll-view>
+        <view class="filter-toggle" bindtap="toggleFilter">
+            <text>{{isFilterExpanded ? '收起筛选' : '展开筛选'}}</text>
+            <van-icon name="{{isFilterExpanded ? 'arrow-up' : 'arrow-down'}}" size="12px" color="#666" />
+        </view>
+    </view>
+
+    <!-- 筛选条件内容区 (根据开关状态显示/隐藏) -->
+    <view class="filter-content" wx:if="{{isFilterExpanded}}">
+        
+        <!-- 尺寸维度 -->
+        <view class="filter-row" wx:if="{{sizeCategories.length > 1}}">
+            <view class="filter-label">尺寸</view>
+            <!-- ⬇️ 这里改成了 scroll-view -->
+            <scroll-view scroll-x class="filter-options" enhanced show-scrollbar="{{false}}">
+                <view class="filter-tag {{currentSizeId === item.id ? 'active' : ''}}"
+                      wx:for="{{sizeCategories}}"
+                      wx:key="id"
+                      bindtap="onSizeFilter"
+                      data-id="{{item.id}}"
+                      data-name="{{item.name}}">
+                    {{item.name}}
+                </view>
+            </scroll-view>
+        </view>
+
+        <!-- 面板维度 -->
+        <view class="filter-row" wx:if="{{panelCategories.length > 1}}">
+            <view class="filter-label">类型</view>
+            <!-- ⬇️ 这里改成了 scroll-view -->
+            <scroll-view scroll-x class="filter-options" enhanced show-scrollbar="{{false}}">
+                <view class="filter-tag {{currentPanelId === item.id ? 'active' : ''}}"
+                      wx:for="{{panelCategories}}"
+                      wx:key="id"
+                      bindtap="onPanelTypeFilter"
+                      data-id="{{item.id}}"
+                      data-name="{{item.name}}">
+                    {{item.name}}
+                </view>
+            </scroll-view>
+        </view>
+        <!-- 分辨率维度 -->
+        <view class="filter-row" wx:if="{{resolutionCategories.length > 1}}">
+            <view class="filter-label">分辨率</view>
+            <scroll-view scroll-x class="filter-options" enhanced show-scrollbar="{{false}}">
+                <view class="filter-tag {{currentResolutionId === item.id ? 'active' : ''}}"
+                      wx:for="{{resolutionCategories}}"
+                      wx:key="id"
+                      bindtap="onResolutionFilter"
+                      data-id="{{item.id}}">
+                    {{item.name}}
+                </view>
+            </scroll-view>
+        </view>
+
+        <!-- 刷新率维度 -->
+        <view class="filter-row" wx:if="{{refreshRateCategories.length > 1}}">
+            <view class="filter-label">刷新率</view>
+            <scroll-view scroll-x class="filter-options" enhanced show-scrollbar="{{false}}">
+                <view class="filter-tag {{currentRefreshRateId === item.id ? 'active' : ''}}"
+                      wx:for="{{refreshRateCategories}}"
+                      wx:key="id"
+                      bindtap="onRefreshRateFilter"
+                      data-id="{{item.id}}">
+                    {{item.name}}
+                </view>
+            </scroll-view>
+        </view>
+
+        <!-- 亮度维度 -->
+        <view class="filter-row" wx:if="{{brightnessCategories.length > 1}}">
+            <view class="filter-label">亮度</view>
+            <scroll-view scroll-x class="filter-options" enhanced show-scrollbar="{{false}}">
+                <view class="filter-tag {{currentBrightnessId === item.id ? 'active' : ''}}"
+                      wx:for="{{brightnessCategories}}"
+                      wx:key="id"
+                      bindtap="onBrightnessFilter"
+                      data-id="{{item.id}}">
+                    {{item.name}}
+                </view>
+            </scroll-view>
+        </view>
+    </view>
 </view>
 
-<!-- 面板筛选 -->
-<view class="quick-filter" wx:if="{{panelTypes.length > 0}}">
-    <view class="filter-title">面板类型</view>
-    <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
-        <view class="filter-tags">
-            <view class="filter-tag {{currentPanelType === item ? 'active' : ''}}"
-                  wx:for="{{panelTypes}}"
-                  wx:key="*this"
-                  bindtap="onPanelTypeFilter"
-                  data-type="{{item}}">
-                {{item}}
-            </view>
+<!-- 筛选结果商品列表 -->
+<view class="section goods-section">
+    <view class="section-header">
+        <view class="header-left">
+            <view class="header-icon filter-icon"></view>
+            <text class="header-title">
+                <block wx:if="{{currentSizeId > 0 || currentPanelId > 0}}">
+                    筛选结果
+                    <text class="filter-condition">
+                        （<block wx:if="{{currentSizeId > 0}}">{{currentSizeName}}</block><block wx:if="{{currentSizeId > 0 && currentPanelId > 0}}"> + </block><block wx:if="{{currentPanelId > 0}}">{{currentPanelName}}</block>）
+                    </text>
+                </block>
+                <block wx:else>全部商品</block>
+            </text>
         </view>
-    </scroll-view>
+    </view>
+
+    <!-- 商品列表 -->
+    <view class="goods-list" wx:if="{{goodsList.length > 0}}">
+        <view class="goods-card" wx:for="{{goodsList}}" wx:key="id">
+            <navigator url="/pages/goods/goods?id={{item.id}}" class="goods-link">
+                <view class="goods-img-wrap">
+                    <image class="goods-img" src="{{item.picUrl}}" mode="aspectFill"></image>
+                </view>
+                <view class="goods-info">
+                    <text class="goods-model">{{item.model || item.name}}</text>
+                    <text class="goods-price">¥{{item.retailPrice}}</text>
+                </view>
+            </navigator>
+        </view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading" wx:if="{{loading}}">
+        <text>加载中...</text>
+    </view>
+
+    <!-- 没有更多 -->
+    <view class="no-more" wx:if="{{finished && goodsList.length > 0}}">
+        <text>没有更多了</text>
+    </view>
+
+    <!-- 无结果 -->
+    <view class="no-result" wx:if="{{goodsList.length === 0 && !loading}}">
+        <text>暂无商品</text>
+    </view>
 </view>
 
-<!-- 阶梯报价 -->
+<!-- 阶梯定价 -->
 <view class="price-tier-banner">
     <view class="tier-header">
         <van-icon name="gold-coin-o" size="18px" color="#f5a623" />
@@ -107,47 +245,9 @@
         </view>
     </view>
 </view>
-<!-- ⭐ 筛选商品列表 -->
-<view class="section" wx:if="{{isFiltering}}">
 
-<view class="section-header">
-    <view class="header-left">
-        <text class="header-title">筛选结果</text>
-    </view>
-</view>
-
-<view class="goods-list">
-
-    <view class="goods-card" wx:for="{{goodsList}}" wx:key="id">
-        <navigator url="/pages/goods/goods?id={{item.id}}">
-
-            <view class="goods-img-wrap">
-                <image class="goods-img" src="{{item.picUrl}}" mode="aspectFill"></image>
-            </view>
-
-            <view class="goods-info">
-                <text class="goods-model">{{item.model || item.name}}</text>
-
-                <text class="goods-price">¥{{item.retailPrice}}</text>
-            </view>
-
-        </navigator>
-    </view>
-
-</view>
-
-<!-- 加载状态 -->
-<view class="loading" wx:if="{{loading}}">
-    加载中...
-</view>
-
-<view class="no-more" wx:if="{{finished}}">
-    没有更多了
-</view>
-
-</view>
 <!-- 热销商品 -->
-<view class="section" wx:if="{{!isFiltering && hotGoods.length > 0}}">
+<view class="section" wx:if="{{hotGoods.length > 0}}">
     <view class="section-header">
         <view class="header-left">
             <view class="header-icon hot-icon"></view>
@@ -162,7 +262,7 @@
 
     <view class="goods-list">
         <view class="goods-card" wx:for="{{hotGoods}}" wx:key="id">
-            <navigator url="/pages/goods/goods?id={{item.id}}">
+            <navigator url="/pages/goods/goods?id={{item.id}}" class="goods-link">
 
                 <view class="goods-img-wrap">
                     <image class="goods-img" src="{{item.picUrl}}" mode="aspectFill"></image>
@@ -175,7 +275,7 @@
 
                     <text class="goods-model">{{item.model || item.name}}</text>
 
-                    <!-- ✅ 真实规格 -->
+                    <!-- 真实规格 -->
                     <view class="goods-spec">
 
                         <block wx:if="{{item.size}}">
@@ -232,7 +332,7 @@
 
                     <text class="scroll-model">{{item.model || item.name}}</text>
 
-                    <!-- ✅ 新品规格 -->
+                    <!-- 新品规格 -->
                     <text class="scroll-spec">
                         <block wx:if="{{item.size}}">
                             {{item.size}}寸

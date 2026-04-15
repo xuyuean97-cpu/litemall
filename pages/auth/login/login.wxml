@@ -1,7 +1,67 @@
 <view class="container">
-  <view class="login-box">
-    <button wx:if="{{canIUseGetUserProfile}}" type="primary" class="wx-login-btn" bindtap="wxLogin">微信直接登录</button>  
-    <button wx:else type="primary" open-type="getUserProfile" class="wx-login-btn" open-type="getUserInfo" bindgetuserinfo="wxLogin">微信直接登录</button>
-    <button type="primary" class="account-login-btn" bindtap="accountLogin">账号登录</button>
+  <!-- 顶部装饰背景 -->
+  <view class="login-header">
+    <view class="header-bg"></view>
+    <view class="header-content">
+      <view class="logo-wrapper">
+        <van-icon name="shop-o" size="60px" color="#fff" />
+      </view>
+      <text class="app-name">笔记本屏幕物料</text>
+      <text class="app-slogan">维修师傅专属采购平台</text>
+    </view>
+  </view>
+
+  <!-- 登录卡片 -->
+  <view class="login-card">
+    <view class="login-title">
+      <text class="title-text">欢迎登录</text>
+      <text class="title-desc">登录后享受更多专属服务</text>
+    </view>
+
+    <view class="login-btns">
+      <button wx:if="{{canIUseGetUserProfile}}" class="wx-login-btn" bindtap="wxLogin">
+        <van-icon name="wechat" size="22px" color="#fff" />
+        <text class="btn-text">微信快捷登录</text>
+      </button>
+      <button wx:else class="wx-login-btn" open-type="getUserInfo" bindgetuserinfo="wxLogin">
+        <van-icon name="wechat" size="22px" color="#fff" />
+        <text class="btn-text">微信快捷登录</text>
+      </button>
+
+      <view class="divider">
+        <view class="divider-line"></view>
+        <text class="divider-text">或</text>
+        <view class="divider-line"></view>
+      </view>
+
+      <button class="account-login-btn" bindtap="accountLogin">
+        <van-icon name="manager-o" size="20px" color="#1a73e8" />
+        <text class="btn-text">账号密码登录</text>
+      </button>
+    </view>
+
+    <!-- 登录优势 -->
+    <view class="login-benefits">
+      <view class="benefit-item">
+        <van-icon name="certificate" size="16px" color="#1a73e8" />
+        <text>正品保证</text>
+      </view>
+      <view class="benefit-item">
+        <van-icon name="gold-coin-o" size="16px" color="#1a73e8" />
+        <text>批发价格</text>
+      </view>
+      <view class="benefit-item">
+        <van-icon name="logistics" size="16px" color="#1a73e8" />
+        <text>极速发货</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部协议 -->
+  <view class="login-footer">
+    <text class="footer-text">登录即表示同意</text>
+    <text class="footer-link">《用户协议》</text>
+    <text class="footer-text">和</text>
+    <text class="footer-link">《隐私政策》</text>
   </view>
 </view>

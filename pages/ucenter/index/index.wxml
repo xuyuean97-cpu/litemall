@@ -1,107 +1,187 @@
 <view class="container">
-  <view class="profile-info" bindtap="goLogin">
-    <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-    <view class="info">
-      <text class="name">{{userInfo.nickName}}</text>
-    </view>
-  </view>
-
-  <view class='separate'></view>
-
-  <view class='user_area'>
-    <view class='user_row' bindtap='goOrder'>
-      <view class='user_row_left'>我的订单</view>
-      <van-icon class='user_row_right' name="arrow" />      
-    </view>
-    <view class='user_column'>
-      <view class='user_column_item' bindtap='goOrderIndex' data-index='1' data-route='/pages/ucenter/order/order'>
-        <text class="user_column_item_badge" wx:if="{{order.unpaid != 0}}">{{order.unpaid}}</text>
-        <image class='user_column_item_image' src='/static/images/pendpay.png'>
-        </image>
-        <view class='user_column_item_text'>待付款</view>
+  <!-- 顶部用户信息卡片 -->
+  <view class="profile-card" bindtap="goLogin">
+    <view class="profile-bg"></view>
+    <view class="profile-content">
+      <view class="avatar-wrapper">
+        <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+        <view class="vip-badge" wx:if="{{isVip}}">
+          <text class="vip-text">VIP</text>
+        </view>
       </view>
-      <view class='user_column_item' bindtap='goOrderIndex' data-index='2' data-route='/pages/ucenter/order/order'>
-        <text class="user_column_item_badge" wx:if="{{order.unship != 0}}">{{order.unship}}</text>
-        <image class='user_column_item_image' src='/static/images/send.png'></image>
-        <view class='user_column_item_text'>待发货</view>
-      </view>
-      <view class='user_column_item' bindtap='goOrderIndex' data-index='3' data-route='/pages/ucenter/order/order'>
-        <text class="user_column_item_badge" wx:if="{{order.unrecv != 0}}">{{order.unrecv}}</text>
-        <image class='user_column_item_image' src='/static/images/receive.png'></image>
-        <view class='user_column_item_text'>待收货</view>
-      </view>
-      <view class='user_column_item' bindtap='goOrderIndex' data-index='4' data-route='/pages/ucenter/order/order'>
-        <text class="user_column_item_badge" wx:if="{{order.uncomment != 0}}">{{order.uncomment}}</text>
-        <image class='user_column_item_image' src='/static/images/comment.png'></image>
-        <view class='user_column_item_text'>待评价</view>
-      </view>
-      <view class='user_column_item' bindtap='goAfterSale'>
-        <image class='user_column_item_image' src='/static/images/aftersale.png'></image>
-        <view class='user_column_item_text'>售后</view>
+      <view class="user-info">
+        <view class="name-row">
+          <text class="name">{{userInfo.nickName}}</text>
+          <view class="vip-tag" wx:if="{{isVip}}">
+            <text class="vip-tag-text">认证会员</text>
+          </view>
+        </view>
+        <text class="user-desc" wx:if="{{!hasLogin}}">点击登录，享受更多权益</text>
+        <text class="user-desc" wx:elif="{{!isVip}}">认证成为VIP会员，享专属特权</text>
+        <text class="user-desc" wx:else>尊贵会员，感谢您的支持</text>
       </view>
     </view>
   </view>
 
-  <view class='separate'></view>
-
-  <view class='user_row'>
-    <view class='user_row_left'>核心服务</view>
-  </view>
-  <view class='user_column'>
-
-    <view class='user_column_item' bindtap='goCoupon'>
-      <image class='user_column_item_image' src='/static/images/coupon.png'></image>
-      <view class='user_column_item_text'>优惠卷</view>
+  <!-- 订单卡片 -->
+  <view class="section-card order-card">
+    <view class="section-header" bindtap='goOrder'>
+      <text class="section-title">我的订单</text>
+      <view class="section-more">
+        <text class="more-text">查看全部</text>
+        <van-icon name="arrow" color="#999" size="14px" />
+      </view>
     </view>
-    <view class='user_column_item' bindtap='goCollect'>
-      <image class='user_column_item_image' src='/static/images/collect.png'></image>
-      <view class='user_column_item_text'>收藏夹</view>
-    </view>
-    <view class='user_column_item' bindtap='goFootprint'>
-      <image class='user_column_item_image' src='/static/images/footprint.png'></image>
-      <view class='user_column_item_text'>浏览足迹</view>
-    </view>
-    <!-- <view class='user_column_item' bindtap='goGroupon'>
-      <image class='user_column_item_image' src='/static/images/group.png'></image>
-      <view class='user_column_item_text'>我的拼团</view>
-    </view> -->
-
-    <view class='user_column_item' bindtap='goAddress'>
-      <image class='user_column_item_image' src='/static/images/address.png'></image>
-      <view class='user_column_item_text'>地址管理</view>
-    </view>
-  </view>
-  <view class='separate'></view>
-
-  <view class='user_row'>
-    <view class='user_row_left'>必备工具</view>
-  </view>
-  <view class='user_column'>
-
-    <button class="user_column_item_phone" open-type="getPhoneNumber" bindgetphonenumber="bindPhoneNumber">
-      <image class='user_column_item_image' src='/static/images/mobile.png'></image>
-      <view class='user_column_item_text'>绑定手机</view>
-    </button>
-    <view class='user_column_item' bindtap='goHelp'>
-      <image class='user_column_item_image' src='/static/images/help.png'></image>
-      <view class='user_column_item_text'>帮助中心</view>
-    </view>
-    <view class='user_column_item' bindtap='goFeedback'>
-      <image class='user_column_item_image' src='/static/images/feedback.png'></image>
-      <view class='user_column_item_text'>意见反馈</view>
-    </view>
-    <view class='user_column_item'>
-      <contact-button style="opacity:0;position:absolute;" type="default-dark" session-from="weapp" size="27">
-      </contact-button>
-      <image class='user_column_item_image' src='/static/images/customer.png'></image>
-      <view class='user_column_item_text'>联系客服</view>
-    </view>
-    <view class='user_column_item' bindtap='aboutUs'>
-      <image class='user_column_item_image' src='/static/images/about.png'></image>
-      <view class='user_column_item_text'>关于我们</view>
+    <view class="order-grid">
+      <view class="order-item" bindtap='goOrderIndex' data-index='1' data-route='/pages/ucenter/order/order'>
+        <view class="order-icon-wrapper">
+          <image class="order-icon" src='/static/images/pendpay.png'></image>
+          <text class="order-badge" wx:if="{{order.unpaid != 0}}">{{order.unpaid}}</text>
+        </view>
+        <text class="order-text">待付款</text>
+      </view>
+      <view class="order-item" bindtap='goOrderIndex' data-index='2' data-route='/pages/ucenter/order/order'>
+        <view class="order-icon-wrapper">
+          <image class="order-icon" src='/static/images/send.png'></image>
+          <text class="order-badge" wx:if="{{order.unship != 0}}">{{order.unship}}</text>
+        </view>
+        <text class="order-text">待发货</text>
+      </view>
+      <view class="order-item" bindtap='goOrderIndex' data-index='3' data-route='/pages/ucenter/order/order'>
+        <view class="order-icon-wrapper">
+          <image class="order-icon" src='/static/images/receive.png'></image>
+          <text class="order-badge" wx:if="{{order.unrecv != 0}}">{{order.unrecv}}</text>
+        </view>
+        <text class="order-text">待收货</text>
+      </view>
+      <view class="order-item" bindtap='goOrderIndex' data-index='4' data-route='/pages/ucenter/order/order'>
+        <view class="order-icon-wrapper">
+          <image class="order-icon" src='/static/images/comment.png'></image>
+          <text class="order-badge" wx:if="{{order.uncomment != 0}}">{{order.uncomment}}</text>
+        </view>
+        <text class="order-text">待评价</text>
+      </view>
+      <view class="order-item" bindtap='goAfterSale'>
+        <view class="order-icon-wrapper">
+          <image class="order-icon" src='/static/images/aftersale.png'></image>
+        </view>
+        <text class="order-text">售后</text>
+      </view>
     </view>
   </view>
-  <view class='separate'></view>
 
-  <view class="logout" wx:if="{{hasLogin}}" bindtap="exitLogin">退出登录</view>
+  <!-- 核心服务卡片 -->
+  <view class="section-card">
+    <view class="section-header">
+      <text class="section-title">核心服务</text>
+    </view>
+    <view class="service-grid">
+      <!-- 会员认证入口 - 突出显示 -->
+      <view class="service-item vip-service" bindtap='goVipAuth'>
+        <view class="service-icon-wrapper vip-icon-bg">
+          <van-icon name="diamond-o" color="#D4AF37" size="28px" />
+        </view>
+        <view class="service-info">
+          <text class="service-text">会员认证</text>
+          <text class="service-desc" wx:if="{{!isVip}}">仅需1元</text>
+          <text class="service-desc vip-desc" wx:else>已认证</text>
+        </view>
+      </view>
+      <view class="service-item" bindtap='goCoupon'>
+        <view class="service-icon-wrapper">
+          <image class="service-icon" src='/static/images/coupon.png'></image>
+        </view>
+        <view class="service-info">
+          <text class="service-text">优惠券</text>
+        </view>
+      </view>
+      <view class="service-item" bindtap='goCollect'>
+        <view class="service-icon-wrapper">
+          <image class="service-icon" src='/static/images/collect.png'></image>
+        </view>
+        <view class="service-info">
+          <text class="service-text">收藏夹</text>
+        </view>
+      </view>
+      <view class="service-item" bindtap='goFootprint'>
+        <view class="service-icon-wrapper">
+          <image class="service-icon" src='/static/images/footprint.png'></image>
+        </view>
+        <view class="service-info">
+          <text class="service-text">浏览足迹</text>
+        </view>
+      </view>
+      <view class="service-item" bindtap='goAddress'>
+        <view class="service-icon-wrapper">
+          <image class="service-icon" src='/static/images/address.png'></image>
+        </view>
+        <view class="service-info">
+          <text class="service-text">地址管理</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 必备工具卡片 -->
+  <view class="section-card">
+    <view class="section-header">
+      <text class="section-title">必备工具</text>
+    </view>
+    <view class="tool-list">
+      <button class="tool-item" open-type="getPhoneNumber" bindgetphonenumber="bindPhoneNumber">
+        <view class="tool-left">
+          <view class="tool-icon-wrapper">
+            <image class="tool-icon" src='/static/images/mobile.png'></image>
+          </view>
+          <text class="tool-text">绑定手机</text>
+        </view>
+        <van-icon name="arrow" color="#ccc" size="14px" />
+      </button>
+      <view class="tool-item" bindtap='goHelp'>
+        <view class="tool-left">
+          <view class="tool-icon-wrapper">
+            <image class="tool-icon" src='/static/images/help.png'></image>
+          </view>
+          <text class="tool-text">帮助中心</text>
+        </view>
+        <van-icon name="arrow" color="#ccc" size="14px" />
+      </view>
+      <view class="tool-item" bindtap='goFeedback'>
+        <view class="tool-left">
+          <view class="tool-icon-wrapper">
+            <image class="tool-icon" src='/static/images/feedback.png'></image>
+          </view>
+          <text class="tool-text">意见反馈</text>
+        </view>
+        <van-icon name="arrow" color="#ccc" size="14px" />
+      </view>
+      <view class="tool-item contact-item">
+        <contact-button class="contact-btn" type="default-dark" session-from="weapp" size="27"></contact-button>
+        <view class="tool-left">
+          <view class="tool-icon-wrapper">
+            <image class="tool-icon" src='/static/images/customer.png'></image>
+          </view>
+          <text class="tool-text">联系客服</text>
+        </view>
+        <van-icon name="arrow" color="#ccc" size="14px" />
+      </view>
+      <view class="tool-item" bindtap='aboutUs'>
+        <view class="tool-left">
+          <view class="tool-icon-wrapper">
+            <image class="tool-icon" src='/static/images/about.png'></image>
+          </view>
+          <text class="tool-text">关于我们</text>
+        </view>
+        <van-icon name="arrow" color="#ccc" size="14px" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录按钮 -->
+  <view class="logout-wrapper" wx:if="{{hasLogin}}">
+    <view class="logout-btn" bindtap="exitLogin">退出登录</view>
+  </view>
+  
+  <!-- 底部留白 -->
+  <view class="bottom-space"></view>
 </view>

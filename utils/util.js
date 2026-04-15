@@ -22,44 +22,79 @@ function formatNumber(n) {
 /**
  * 封封微信的的request
  */
+/**
+ * 封装微信的request
+ * 兼容本地调试(wx.request)与线上云托管(wx.cloud.callContainer)
+ */
 function request(url, data = {}, method = "GET") {
   return new Promise(function(resolve, reject) {
-    // 👇 微信云托管官方调用方式，替换原有 wx.request
-    wx.cloud.callContainer({
-      config: {
-        env: 'prod-0gpcvux32519964c', 
-      },
-      // ======================================================
-      path: url,          // 接口路径，原逻辑不动
-      method: method,     // 请求方式，原逻辑不动
-      data: data,         // 请求参数，原逻辑不动
-      header: {
-        'Content-Type': 'application/json',
-        'X-Litemall-Token': wx.getStorageSync('token'),
-        // ⚠️ 修改点 2：必须加上 X-WX-SERVICE 指定服务名！
-        // 请确保 'litemall' 是你在云托管控制台创建的【服务名称】。如果是其他名字请修改。
-        'X-WX-SERVICE': 'aocamity' 
-      },
-      success: function(res) {
-        // 完全保留你原来的 501 登录失效逻辑
-        if (res.statusCode == 200) {
-          if (res.data.errno == 501) {
-            try {
-              wx.removeStorageSync('userInfo');
-              wx.removeStorageSync('token');
-            } catch (e) {}
-            wx.navigateTo({ url: '/pages/auth/login/login' });
+    
+    // 判断是否为本地 HTTP 请求
+    // (在 config/api.js 中配置 http://localhost:8080... 会进入此分支)
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      wx.request({
+        url: url,
+        method: method,
+        data: data,
+        header: {
+          'Content-Type': 'application/json',
+          'X-Litemall-Token': wx.getStorageSync('token')
+        },
+        success: function(res) {
+          if (res.statusCode == 200) {
+            if (res.data.errno == 501) {
+              try {
+                wx.removeStorageSync('userInfo');
+                wx.removeStorageSync('token');
+              } catch (e) {}
+              wx.navigateTo({ url: '/pages/auth/login/login' });
+            } else {
+              resolve(res.data);
+            }
           } else {
-            resolve(res.data);
+            reject(res.errMsg);
           }
-        } else {
-          reject(res.errMsg);
+        },
+        fail: function(err) {
+          reject(err);
         }
-      },
-      fail: function(err) {
-        reject(err)
-      }
-    })
+      });
+      
+    } else {
+      // 👇 微信云托管官方调用方式 (线上环境使用)
+      wx.cloud.callContainer({
+        config: {
+          env: 'prod-0gpcvux32519964c', 
+        },
+        path: url,          // 接口路径
+        method: method,     // 请求方式
+        data: data,         // 请求参数
+        header: {
+          'Content-Type': 'application/json',
+          'X-Litemall-Token': wx.getStorageSync('token'),
+          'X-WX-SERVICE': 'aocamity' // 你的云托管服务名
+        },
+        success: function(res) {
+          if (res.statusCode == 200) {
+            if (res.data.errno == 501) {
+              try {
+                wx.removeStorageSync('userInfo');
+                wx.removeStorageSync('token');
+              } catch (e) {}
+              wx.navigateTo({ url: '/pages/auth/login/login' });
+            } else {
+              resolve(res.data);
+            }
+          } else {
+            reject(res.errMsg);
+          }
+        },
+        fail: function(err) {
+          reject(err)
+        }
+      })
+    }
+    
   });
 }
 
