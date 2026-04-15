@@ -9,15 +9,45 @@
     </navigator>
 </view>
 
-<!-- 轮播图 -->
-<swiper class="banner" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#fff" autoplay interval="4000" duration="500" circular>
-    <swiper-item wx:for="{{banner}}" wx:key="id">
-        <navigator wx:if="{{item.link > 0}}" url="/pages/goods/goods?id={{item.link}}">
-            <image src="{{item.url}}" mode="aspectFill"></image>
-        </navigator>
-        <image wx:else src="{{item.url}}" mode="aspectFill"></image>
-    </swiper-item>
-</swiper>
+<!-- 顶部抬头 - 专业定位 -->
+<view class="hero-header">
+    <view class="hero-content">
+        <view class="hero-main">
+            <text class="hero-title">笔记本屏幕物料</text>
+            <text class="hero-subtitle">维修师傅专属采购平台</text>
+        </view>
+        <view class="hero-tags">
+            <view class="hero-tag">
+                <van-icon name="certificate" size="14px" color="#fff" />
+                <text>原厂品质</text>
+            </view>
+            <view class="hero-tag">
+                <van-icon name="logistics" size="14px" color="#fff" />
+                <text>闪电发货</text>
+            </view>
+            <view class="hero-tag">
+                <van-icon name="gold-coin-o" size="14px" color="#fff" />
+                <text>批发价格</text>
+            </view>
+        </view>
+    </view>
+    <view class="hero-stats">
+        <view class="stat-item">
+            <text class="stat-num">2000+</text>
+            <text class="stat-label">屏幕型号</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+            <text class="stat-num">当日</text>
+            <text class="stat-label">发货时效</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+            <text class="stat-num">质保</text>
+            <text class="stat-label">售后无忧</text>
+        </view>
+    </view>
+</view>
 
 <!-- 品牌 -->
 <view class="brand-nav" wx:if="{{screenBrands.length > 0}}">
