@@ -596,13 +596,14 @@
   bottom: 0;
   z-index: 10;
   width: 750rpx;
-  height: 110rpx;
+  height: 120rpx;
   display: flex;
   align-items: center;
   background: #fff;
-  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.06);
-  padding: 0 16rpx;
-  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+  padding: 12rpx 20rpx;
+  padding-bottom: calc(12rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
 .bottom-btn .l {
