@@ -1,165 +1,392 @@
 page {
   height: 100%;
   width: 100%;
-  background: #f4f4f4;
+  background: linear-gradient(180deg, #ab956d 0%, #f5f5f5 280rpx);
 }
 
 .container {
-  background: #f4f4f4;
-  height: auto;
+  min-height: 100%;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+}
+
+/* 顶部用户信息卡片 */
+.profile-card {
+  position: relative;
+  margin-top: 30rpx;
+  padding: 40rpx 30rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  width: 100%;
 }
 
-.profile-info {
-  background-color: #ab956d;
-  color: #f4f4f4;
+.profile-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120rpx;
+  background: linear-gradient(135deg, #ab956d 0%, #c9b896 100%);
+  opacity: 0.1;
+}
+
+.profile-content {
+  position: relative;
   display: flex;
   align-items: center;
-  padding: 30rpx;
-  font-size: 28rpx;
 }
 
-.profile-info .avatar {
-  height: 148rpx;
-  width: 148rpx;
+.avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
   border-radius: 50%;
+  border: 4rpx solid #fff;
+  box-shadow: 0 4rpx 12rpx rgba(171, 149, 109, 0.3);
 }
 
-.profile-info .info {
-  flex: 1;
-  height: 85rpx;
-  padding-left: 31.25rpx;
+.vip-badge {
+  position: absolute;
+  bottom: -4rpx;
+  right: -4rpx;
+  background: linear-gradient(135deg, #D4AF37 0%, #F2D06B 100%);
+  padding: 4rpx 12rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(212, 175, 55, 0.4);
 }
 
-.profile-info .name {
-  display: block;
-  height: 45rpx;
-  line-height: 45rpx;
+.vip-text {
+  font-size: 18rpx;
+  font-weight: 600;
   color: #fff;
-  font-size: 37.5rpx;
-  margin-bottom: 10rpx;
 }
 
-.profile-info .level {
-  display: block;
-  height: 30rpx;
-  line-height: 30rpx;
-  margin-bottom: 10rpx;
-  color: #7f7f7f;
-  font-size: 30rpx;
+.user-info {
+  flex: 1;
+  margin-left: 24rpx;
 }
 
-.user_area {
-  /* border: 1px solid black; */
-  width: 100%;
-  height: 226rpx;
-  /* margin: 0 auto; */
-  margin-top: -8rpx;
-  background: #fff;
-  /* border-top: 1px solid #f4f4f4; */
-}
-
-.user_row {
-  /* border: 1px solid black; */
-  height: 86rpx;
-  line-height: 86rpx;
-  border-bottom: 1px solid #fafafa;
-}
-
-.user_row_left {
-  /* border: 1px solid #757575; */
-  float: left;
-  height: 86rpx;
-  font-weight: 550;
-  line-height: 86rpx;
-  margin-left: 35rpx;
-  font-size: 26rpx;
-  letter-spacing: 1rpx;
-}
-
-.user_row_right {
-  /* border: 1px solid #757575; */
-  float: right;
-  height: 40rpx;
-  width: 40rpx;
-  font-weight: 550;
-  line-height: 86rpx;
-  margin-top: 28rpx;
-  margin-right: 30rpx;
-}
-
-.user_column {
-  /* border: 1px solid black; */
-  height: 140rpx;
+.name-row {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.vip-tag {
+  margin-left: 12rpx;
+  padding: 4rpx 12rpx;
+  background: linear-gradient(135deg, #D4AF37 0%, #F2D06B 100%);
+  border-radius: 20rpx;
+}
+
+.vip-tag-text {
+  font-size: 20rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.user-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 卡片通用样式 */
+.section-card {
+  margin-top: 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.section-more {
+  display: flex;
   align-items: center;
 }
 
-.user_column_item {
-  width: 30%;
-  height: 140rpx;
-  background: #fff;
+.more-text {
+  font-size: 24rpx;
+  color: #999;
+  margin-right: 4rpx;
+}
+
+/* 订单网格 */
+.order-grid {
+  display: flex;
+  justify-content: space-between;
+}
+
+.order-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.order-icon-wrapper {
+  position: relative;
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
+  border-radius: 50%;
+  margin-bottom: 12rpx;
+}
+
+.order-icon {
+  width: 44rpx;
+  height: 44rpx;
+}
+
+.order-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  line-height: 32rpx;
   text-align: center;
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 20rpx;
+  border-radius: 16rpx;
+  padding: 0 8rpx;
+  box-sizing: border-box;
+}
+
+.order-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 核心服务网格 */
+.service-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -10rpx;
+}
+
+.service-item {
+  width: calc(33.33% - 20rpx);
+  margin: 10rpx;
+  padding: 20rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 16rpx;
+  transition: background 0.2s;
+}
+
+.service-item:active {
+  background: #f5f5f5;
+}
+
+/* VIP服务特殊样式 */
+.vip-service {
+  width: calc(100% - 20rpx);
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #fffbf0 0%, #fff5e0 100%);
+  border: 2rpx solid #f5deb3;
+  margin-bottom: 10rpx;
+}
+
+.vip-service .service-icon-wrapper {
+  margin-right: 20rpx;
+}
+
+.vip-icon-bg {
+  width: 80rpx;
+  height: 80rpx;
+  background: linear-gradient(135deg, #fff8e6 0%, #ffe7b3 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vip-service .service-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.vip-service .service-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #8B6914;
+}
+
+.vip-service .service-desc {
+  font-size: 22rpx;
+  color: #D4AF37;
+  margin-top: 4rpx;
+}
+
+.vip-service .vip-desc {
+  color: #52c41a;
+}
+
+.service-icon-wrapper {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
+  border-radius: 50%;
+  margin-bottom: 12rpx;
+}
+
+.service-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.service-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.service-text {
+  font-size: 24rpx;
+  color: #333;
+}
+
+.service-desc {
+  font-size: 20rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+/* 工具列表 */
+.tool-list {
+  margin: -12rpx -30rpx;
+}
+
+.tool-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 30rpx;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tool-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 30rpx;
+  right: 30rpx;
+  height: 1rpx;
+  background: #f0f0f0;
+}
+
+.tool-item:last-child::after {
+  display: none;
+}
+
+.tool-item:active {
+  background: #f9f9f9;
+}
+
+.tool-left {
+  display: flex;
+  align-items: center;
+}
+
+.tool-icon-wrapper {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8;
+  border-radius: 16rpx;
+  margin-right: 20rpx;
+}
+
+.tool-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.tool-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 联系客服按钮 */
+.contact-item {
   position: relative;
 }
 
-.user_column_item_badge {
-  height: 28rpx;
-  width: 28rpx;
+.contact-btn {
   position: absolute;
-  background: #b4282d;
-  color: #fff;
-  border-radius: 50%;
-  margin-top: 20rpx;
-  margin-left: 40rpx;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  z-index: 10;
 }
 
-.user_column_item_image {
-  width: 50rpx;
-  height: 50rpx;
-  margin-top: 30rpx;
+/* 退出登录 */
+.logout-wrapper {
+  margin-top: 40rpx;
+  padding: 0 20rpx;
 }
 
-.user_column_item_text {
-  /* border: 1px solid black; */
-  margin-top: 5rpx;
-  font-size: 24rpx;
-  color: #555;
-}
-
-.separate {
-  background: #e0e3da;
-  width: 100%;
-  height: 6rpx;
-}
-
-.user_column_item_phone {
-  width: 30%;
-  height: 140rpx;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  float: left;
-  background: #fff;
-  border-radius: 0;
-}
-
-.user_column_item_phone::after {
-  border: none;
-  border-radius: 0;
-}
-
-.logout {
-  margin-top: 30rpx;
-  height: 100rpx;
-  width: 100%;
-  line-height: 100rpx;
+.logout-btn {
+  height: 88rpx;
+  line-height: 88rpx;
   text-align: center;
   background: #fff;
-  color: red;
+  border-radius: 44rpx;
+  color: #ff4d4f;
   font-size: 30rpx;
+  font-weight: 500;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+.logout-btn:active {
+  background: #fafafa;
+}
+
+/* 底部留白 */
+.bottom-space {
+  height: 40rpx;
 }

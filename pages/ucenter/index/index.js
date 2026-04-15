@@ -15,7 +15,8 @@ Page({
       unrecv: 0,
       uncomment: 0
     },
-    hasLogin: false
+    hasLogin: false,
+    isVip: false
   },
   onLoad: function(options) {
     // 页面初始化 options为页面跳转所带来的参数
@@ -24,7 +25,6 @@ Page({
 
   },
   onShow: function() {
-
     //获取用户的登录信息
     if (app.globalData.hasLogin) {
       let userInfo = wx.getStorageSync('userInfo');
@@ -41,15 +41,32 @@ Page({
           });
         }
       });
-    }
 
+      // 获取VIP状态
+      this.checkVipStatus();
+    }
   },
   onHide: function() {
     // 页面隐藏
-
   },
   onUnload: function() {
     // 页面关闭
+  },
+  // 检查VIP状态
+  checkVipStatus: function() {
+    let that = this;
+    util.request(api.VipStatus).then(function(res) {
+      if (res.errno === 0) {
+        that.setData({
+          isVip: res.data.isVip
+        });
+      }
+    }).catch(function(err) {
+      // 如果接口不存在，默认非VIP
+      that.setData({
+        isVip: false
+      });
+    });
   },
   goLogin() {
     if (!this.data.hasLogin) {
@@ -161,6 +178,18 @@ Page({
       });
     };
   },
+  // 跳转到VIP认证页面
+  goVipAuth() {
+    if (this.data.hasLogin) {
+      wx.navigateTo({
+        url: "/pages/ucenter/vipAuth/vipAuth"
+      });
+    } else {
+      wx.navigateTo({
+        url: "/pages/auth/login/login"
+      });
+    };
+  },
   bindPhoneNumber: function(e) {
     if (e.detail.errMsg !== "getPhoneNumber:ok") {
       // 拒绝授权
@@ -229,6 +258,5 @@ Page({
         });
       }
     })
-
   }
 })

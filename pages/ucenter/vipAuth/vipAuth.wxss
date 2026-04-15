@@ -1,0 +1,240 @@
+page {
+  background: #f5f5f5;
+  min-height: 100%;
+}
+
+.container {
+  padding: 24rpx;
+  padding-bottom: 180rpx;
+}
+
+/* VIP卡片 */
+.vip-card {
+  position: relative;
+  border-radius: 24rpx;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+}
+
+.vip-card.vip-active {
+  background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+}
+
+.vip-card-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300rpx;
+  height: 300rpx;
+  background: radial-gradient(circle at center, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+}
+
+.vip-card-content {
+  position: relative;
+  padding: 48rpx 40rpx;
+}
+
+.vip-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.vip-title {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #333;
+  margin-left: 16rpx;
+}
+
+.vip-active .vip-title {
+  color: #D4AF37;
+}
+
+.vip-status {
+  margin-bottom: 32rpx;
+}
+
+.status-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.vip-active .status-text {
+  color: #999;
+}
+
+.vip-price {
+  display: flex;
+  align-items: baseline;
+}
+
+.price-label {
+  font-size: 26rpx;
+  color: #999;
+  margin-right: 16rpx;
+}
+
+.price-value {
+  font-size: 72rpx;
+  font-weight: 700;
+  color: #D4AF37;
+  line-height: 1;
+}
+
+.price-unit {
+  font-size: 28rpx;
+  color: #D4AF37;
+  margin-left: 4rpx;
+}
+
+.vip-date {
+  margin-top: 16rpx;
+}
+
+.date-label {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 权益区域 */
+.benefits-section {
+  margin-top: 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.title-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-left: 12rpx;
+}
+
+.notice-title {
+  color: #666;
+  font-weight: 500;
+}
+
+.benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28rpx;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: #fffbf0;
+  border-radius: 16rpx;
+  border: 1rpx solid #fff5e0;
+}
+
+.benefit-icon {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff8e6 0%, #ffe7b3 100%);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.benefit-info {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.benefit-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+
+.benefit-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 说明区域 */
+.notice-section {
+  margin-top: 24rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+}
+
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.notice-item {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.6;
+}
+
+/* 底部按钮 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.btn-wrapper {
+  width: 100%;
+}
+
+.auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96rpx;
+  background: linear-gradient(135deg, #D4AF37 0%, #F2D06B 100%);
+  border-radius: 48rpx;
+  box-shadow: 0 8rpx 24rpx rgba(212, 175, 55, 0.4);
+}
+
+.auth-btn.authed {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  box-shadow: 0 8rpx 24rpx rgba(82, 196, 26, 0.4);
+}
+
+.btn-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #fff;
+}
+
+.btn-price {
+  font-size: 28rpx;
+  color: #fff;
+  margin-left: 12rpx;
+  padding: 4rpx 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20rpx;
+}
+
+.auth-btn.authed .btn-text {
+  margin-left: 8rpx;
+}

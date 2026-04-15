@@ -100,4 +100,7 @@ module.exports = {
 
   UserIndex: WxApiRoot + 'user/index', //个人页面用户相关信息
   IssueList: WxApiRoot + 'issue/list', //帮助信息
+
+  VipStatus: WxApiRoot + 'vip/status', //获取VIP认证状态
+  VipAuthPrepay: WxApiRoot + 'vip/prepay', //VIP认证预支付（1元）
 };
