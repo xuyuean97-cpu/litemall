@@ -1,0 +1,89 @@
+<!-- AI 客服聊天页面 -->
+<view class="chat-container">
+
+  <!-- 消息列表 -->
+  <scroll-view
+    class="message-list"
+    scroll-y
+    scroll-into-view="{{scrollTarget}}"
+    enhanced
+    show-scrollbar="{{false}}"
+  >
+
+    <!-- 欢迎卡片 -->
+    <view class="welcome-card" wx:if="{{messages.length === 0}}">
+      <view class="welcome-avatar">
+        <view class="avatar-icon">
+          <view class="ai-dot dot1"></view>
+          <view class="ai-dot dot2"></view>
+          <view class="ai-dot dot3"></view>
+        </view>
+      </view>
+      <text class="welcome-title">你好，我是屏幕助手</text>
+      <text class="welcome-desc">专业解答笔记本屏幕选型、兼容性、维修等问题</text>
+      <view class="quick-questions">
+        <view class="quick-q" wx:for="{{quickQuestions}}" wx:key="index" bindtap="sendQuickQuestion" data-text="{{item}}">
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 消息列表 -->
+    <view wx:for="{{messages}}" wx:key="id" class="message-wrapper {{item.role === 'user' ? 'user-side' : 'ai-side'}}">
+
+      <!-- AI 头像 -->
+      <view class="msg-avatar ai-avatar" wx:if="{{item.role === 'assistant'}}">
+        <view class="ai-avatar-icon">AI</view>
+      </view>
+
+      <!-- 消息气泡 -->
+      <view class="bubble {{item.role === 'user' ? 'bubble-user' : 'bubble-ai'}}">
+        <!-- AI 打字中动画 -->
+        <view class="typing-indicator" wx:if="{{item.isTyping}}">
+          <view class="typing-dot"></view>
+          <view class="typing-dot"></view>
+          <view class="typing-dot"></view>
+        </view>
+        <text wx:else selectable>{{item.content}}</text>
+      </view>
+
+      <!-- 用户头像 -->
+      <view class="msg-avatar user-avatar" wx:if="{{item.role === 'user'}}">
+        <text>我</text>
+      </view>
+
+    </view>
+
+    <!-- 滚动锚点 -->
+    <view id="chat-bottom" style="height: 20rpx;"></view>
+
+  </scroll-view>
+
+  <!-- 快捷问题（有消息时显示在底部） -->
+  <scroll-view scroll-x class="quick-bar" wx:if="{{messages.length > 0 && !isLoading}}" show-scrollbar="{{false}}">
+    <view class="quick-bar-list">
+      <view class="quick-bar-item" wx:for="{{quickQuestions}}" wx:key="index" bindtap="sendQuickQuestion" data-text="{{item}}">
+        <text>{{item}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <textarea
+      class="input-box"
+      placeholder="输入您的问题..."
+      placeholder-class="input-placeholder"
+      value="{{inputText}}"
+      bindinput="onInput"
+      confirm-type="send"
+      auto-height
+      maxlength="500"
+      disabled="{{isLoading}}"
+    />
+    <view class="send-btn {{(inputText.length > 0 && !isLoading) ? 'send-active' : 'send-disabled'}}" bindtap="sendMessage">
+      <view class="send-icon"></view>
+    </view>
+  </view>
+
+</view>

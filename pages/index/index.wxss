@@ -855,3 +855,81 @@
 .safe-bottom {
   height: 120rpx;
 }
+
+/* AI 客服悬浮按钮 */
+.ai-float-btn {
+  position: fixed;
+  right: 32rpx;
+  bottom: 180rpx;
+  width: 108rpx;
+  height: 108rpx;
+  background: linear-gradient(145deg, #1a73e8 0%, #0d47a1 100%);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(26, 115, 232, 0.45);
+  z-index: 999;
+  animation: ai-float-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes ai-float-pulse {
+  0%, 100% {
+    box-shadow: 0 8rpx 24rpx rgba(26, 115, 232, 0.45);
+    transform: translateY(0);
+  }
+  50% {
+    box-shadow: 0 14rpx 36rpx rgba(26, 115, 232, 0.6);
+    transform: translateY(-6rpx);
+  }
+}
+
+.ai-float-icon {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5rpx;
+  height: 36rpx;
+  margin-bottom: 4rpx;
+}
+
+.ai-dot {
+  width: 8rpx;
+  border-radius: 4rpx;
+  background: rgba(255, 255, 255, 0.9);
+  animation: ai-dot-wave 1.4s ease-in-out infinite;
+}
+
+.dot1 {
+  height: 16rpx;
+  animation-delay: 0s;
+}
+
+.dot2 {
+  height: 28rpx;
+  animation-delay: 0.2s;
+}
+
+.dot3 {
+  height: 20rpx;
+  animation-delay: 0.4s;
+}
+
+@keyframes ai-dot-wave {
+  0%, 60%, 100% {
+    transform: scaleY(1);
+    opacity: 0.7;
+  }
+  30% {
+    transform: scaleY(1.4);
+    opacity: 1;
+  }
+}
+
+.ai-float-label {
+  font-size: 18rpx;
+  color: #fff;
+  letter-spacing: 1rpx;
+  font-weight: 500;
+}

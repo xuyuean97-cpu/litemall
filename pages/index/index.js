@@ -330,6 +330,12 @@ Page({
     });
   },
 
+  openAiChat() {
+    wx.navigateTo({
+      url: '/pages/aiChat/aiChat'
+    });
+  },
+
   onShareAppMessage() {
     return {
       title: '笔记本屏幕商城',

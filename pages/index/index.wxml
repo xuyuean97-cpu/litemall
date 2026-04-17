@@ -407,4 +407,14 @@
 
 <view class="safe-bottom"></view>
 
+<!-- AI 客服悬浮按钮 -->
+<view class="ai-float-btn" bindtap="openAiChat">
+  <view class="ai-float-icon">
+    <view class="ai-dot dot1"></view>
+    <view class="ai-dot dot2"></view>
+    <view class="ai-dot dot3"></view>
+  </view>
+  <text class="ai-float-label">AI客服</text>
+</view>
+
 </view>
