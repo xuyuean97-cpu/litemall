@@ -8,6 +8,12 @@
 // 云平台上线时使用
  var WxApiRoot = '/litemall/wx/';
 
+// AI 客服 WebSocket 地址
+// 本地开发时使用
+// var AiWsRoot = 'ws://localhost:8000';
+// 云平台部署时使用
+var AiWsRoot = 'wss://your-ai-server.com';
+
 module.exports = {
   IndexUrl: WxApiRoot + 'home/index', //首页数据接口
   AboutUrl: WxApiRoot + 'home/about', //介绍信息
@@ -103,4 +109,7 @@ module.exports = {
   IssueList: WxApiRoot + 'issue/list', //帮助信息
   VipStatus: WxApiRoot + 'vip/status', //获取VIP认证状态
   VipAuthPrepay: WxApiRoot + 'vip/prepay', //VIP认证预支付（1元）
+
+  // AI 客服
+  AiChatWs: AiWsRoot + '/api/v1/airport-assistant/chat/ws', //AI客服WebSocket
 };
