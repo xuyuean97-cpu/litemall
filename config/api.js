@@ -1,13 +1,17 @@
 // 以下是业务服务器API地址
 // 本机开发时使用
-//  var WxApiRoot = 'http://localhost:8080/wx/';
+  var WxApiRoot = 'http://localhost:8080/wx/';
 // 局域网测试使用
 // var WxApiRoot = 'http://192.168.1.3:8080/wx/';
 // 云平台部署时使用
 // var WxApiRoot = 'http://122.51.199.160:8080/wx/';
 // 云平台上线时使用
- var WxApiRoot = '/litemall/wx/';
-
+//  var WxApiRoot = '/litemall/wx/';
+// AI 客服 WebSocket 地址
+// 本地开发时使用
+ var AiWsRoot = 'wss://139e6a6e.r18.cpolar.top';
+// 云平台部署时使用
+// var AiWsRoot = 'wss://your-ai-server.com';
 module.exports = {
   IndexUrl: WxApiRoot + 'home/index', //首页数据接口
   AboutUrl: WxApiRoot + 'home/about', //介绍信息
@@ -103,4 +107,6 @@ module.exports = {
   IssueList: WxApiRoot + 'issue/list', //帮助信息
   VipStatus: WxApiRoot + 'vip/status', //获取VIP认证状态
   VipAuthPrepay: WxApiRoot + 'vip/prepay', //VIP认证预支付（1元）
+   // AI 客服
+   AiChatWs: AiWsRoot + '/api/v1/ecommerce-assistant/chat/ws', //AI客服WebSocket
 };

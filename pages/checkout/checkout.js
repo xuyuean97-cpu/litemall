@@ -30,11 +30,11 @@ Page({
   getCheckoutInfo: function() {
     let that = this;
     util.request(api.CartCheckout, {
-      cartId: that.data.cartId,
-      addressId: that.data.addressId,
-      couponId: that.data.couponId,
-      userCouponId: that.data.userCouponId,
-      grouponRulesId: that.data.grouponRulesId
+      cartId: that.data.cartId || 0,
+      addressId: that.data.addressId || 0,
+      couponId: that.data.couponId || 0,
+      userCouponId: that.data.userCouponId || 0,
+      grouponRulesId: that.data.grouponRulesId || 0 
     }).then(function(res) {
       if (res.errno === 0) {
         that.setData({
@@ -136,13 +136,14 @@ Page({
       return false;
     }
     util.request(api.OrderSubmit, {
-      cartId: this.data.cartId,
-      addressId: this.data.addressId,
-      couponId: this.data.couponId,
-      userCouponId: this.data.userCouponId,
-      message: this.data.message,
-      grouponRulesId: this.data.grouponRulesId,
-      grouponLinkId: this.data.grouponLinkId
+       // 使用 || 0 ，如果前面的值为 undefined、null 或空字符串，就自动传 0 过去
+       cartId: this.data.cartId || 0,
+       addressId: this.data.addressId || 0,
+       couponId: this.data.couponId || 0,
+       userCouponId: this.data.userCouponId || 0,
+       message: this.data.message || '',
+       grouponRulesId: this.data.grouponRulesId || 0,
+       grouponLinkId: this.data.grouponLinkId || 0
     }, 'POST').then(res => {
       if (res.errno === 0) {
 

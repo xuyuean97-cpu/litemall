@@ -1,0 +1,237 @@
+<!-- AI 客服聊天页面 -->
+<view class="chat-container">
+
+<!-- 消息列表 -->
+<scroll-view
+  class="message-list"
+  scroll-y
+  scroll-into-view="{{scrollTarget}}"
+  enhanced
+  show-scrollbar="{{false}}"
+>
+
+  <!-- 欢迎卡片 -->
+  <view class="welcome-card" wx:if="{{messages.length === 0}}">
+    <view class="welcome-avatar">
+      <view class="avatar-icon">
+        <view class="ai-dot dot1"></view>
+        <view class="ai-dot dot2"></view>
+        <view class="ai-dot dot3"></view>
+      </view>
+    </view>
+    <text class="welcome-title">你好，我是屏幕助手</text>
+    <text class="welcome-desc">专业解答笔记本屏幕选型、兼容性、维修等问题</text>
+    <view class="quick-questions">
+      <view class="quick-q" wx:for="{{quickQuestions}}" wx:key="index" bindtap="sendQuickQuestion" data-text="{{item}}">
+        <text>{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 消息列表 -->
+  <view wx:for="{{messages}}" wx:key="id" class="message-wrapper {{item.role === 'user' ? 'user-side' : 'ai-side'}}">
+
+    <!-- AI 头像 -->
+    <view class="msg-avatar ai-avatar" wx:if="{{item.role === 'assistant'}}">
+      <view class="ai-avatar-icon">AI</view>
+    </view>
+
+    <!-- 消息气泡 -->
+    <view class="bubble {{item.role === 'user' ? 'bubble-user' : 'bubble-ai'}}">
+      
+      <!-- AI 打字中动画 -->
+      <view class="typing-indicator" wx:if="{{item.isTyping && (!item.contents || item.contents.length === 0)}}">
+        <view class="typing-dot"></view>
+        <view class="typing-dot"></view>
+        <view class="typing-dot"></view>
+      </view>
+
+      <!-- 消息内容块 -->
+      <block wx:for="{{item.contents}}" wx:for-item="content" wx:key="index">
+
+        <!-- 文本内容 -->
+        <view wx:if="{{content.type === 'text'}}" class="content-text">
+          <text selectable>{{content.text}}</text>
+        </view>
+
+        <!-- 富文本内容（含图片） -->
+        <view wx:elif="{{content.type === 'rich_content'}}" class="content-rich">
+          <view class="rich-text" wx:if="{{content.layout === 'text_first' || !content.layout}}">
+            <text selectable>{{content.text}}</text>
+          </view>
+          <view class="rich-images" wx:if="{{content.images && content.images.length > 0}}">
+            <image 
+              wx:for="{{content.images}}" 
+              wx:for-item="img" 
+              wx:key="id"
+              class="rich-image"
+              src="{{img.data}}"
+              mode="widthFix"
+              bindtap="previewImage"
+              data-url="{{img.data}}"
+            />
+          </view>
+          <view class="rich-text" wx:if="{{content.layout === 'image_first'}}">
+            <text selectable>{{content.text}}</text>
+          </view>
+        </view>
+
+        <!-- 表单内容 -->
+        <view wx:elif="{{content.type === 'form'}}" class="content-form">
+          <view class="form-header">
+            <text class="form-title">{{content.title}}</text>
+            <text class="form-desc" wx:if="{{content.description}}">{{content.description}}</text>
+          </view>
+          <form bindsubmit="submitForm" data-formid="{{content.formId}}">
+            <view class="form-fields">
+              <view class="form-field" wx:for="{{content.fields}}" wx:for-item="field" wx:key="name">
+                <text class="field-label">{{field.label}}<text wx:if="{{field.required}}" class="required">*</text></text>
+                <input 
+                  wx:if="{{field.type === 'text' || field.type === 'email' || field.type === 'tel'}}"
+                  class="field-input"
+                  name="{{field.name}}"
+                  type="{{field.type === 'tel' ? 'number' : 'text'}}"
+                  placeholder="{{field.placeholder || '请输入'}}"
+                />
+                <textarea 
+                  wx:elif="{{field.type === 'textarea'}}"
+                  class="field-textarea"
+                  name="{{field.name}}"
+                  placeholder="{{field.placeholder || '请输入'}}"
+                  auto-height
+                />
+                <picker 
+                  wx:elif="{{field.type === 'select'}}"
+                  class="field-picker"
+                  name="{{field.name}}"
+                  range="{{field.options}}"
+                  range-key="label"
+                >
+                  <view class="picker-value">{{field.placeholder || '请选择'}}</view>
+                </picker>
+              </view>
+            </view>
+            <view class="form-buttons">
+              <button 
+                wx:for="{{content.buttons}}" 
+                wx:for-item="btn" 
+                wx:key="action"
+                class="form-btn {{btn.style === 'primary' ? 'btn-primary' : 'btn-default'}}"
+                form-type="{{btn.action === 'submit' ? 'submit' : ''}}"
+              >{{btn.text}}</button>
+            </view>
+          </form>
+        </view>
+
+        <!-- 列表内容（商品/航班等） -->
+        <view wx:elif="{{content.type === 'list'}}" class="content-list">
+          <view class="list-header" wx:if="{{content.title}}">
+            <text class="list-title">{{content.title}}</text>
+          </view>
+          <view class="list-items">
+            <view 
+              class="list-item" 
+              wx:for="{{content.items}}" 
+              wx:for-item="listItem" 
+              wx:key="index"
+              bindtap="tapListItem"
+              data-item="{{listItem}}"
+            >
+              <image wx:if="{{listItem.pic_url || listItem.image}}" class="item-image" src="{{listItem.pic_url || listItem.image}}" mode="aspectFill"/>
+              <view class="item-info">
+                <text class="item-name">{{listItem.name || listItem.title || listItem.flight_no}}</text>
+                <text class="item-desc" wx:if="{{listItem.brief || listItem.description || listItem.departure_time}}">{{listItem.brief || listItem.description || listItem.departure_time}}</text>
+                <text class="item-price" wx:if="{{listItem.retail_price || listItem.price}}">¥{{listItem.retail_price || listItem.price}}</text>
+              </view>
+              <view class="item-arrow"></view>
+            </view>
+          </view>
+          <view class="list-hint" wx:if="{{content.actionHint}}">
+            <text>{{content.actionHint}}</text>
+          </view>
+        </view>
+
+        <!-- 转人工提示 -->
+        <view wx:elif="{{content.type === 'transfer'}}" class="content-transfer">
+          <view class="transfer-icon">
+            <text class="icon-human">👤</text>
+          </view>
+          <text class="transfer-text">{{content.text}}</text>
+          <button class="transfer-btn" bindtap="transferToHuman">联系人工客服</button>
+        </view>
+
+        <!-- 错误提示 -->
+        <view wx:elif="{{content.type === 'error'}}" class="content-error">
+          <text class="error-text">{{content.text}}</text>
+        </view>
+
+        <!-- 用户发送的图片 -->
+        <view wx:elif="{{content.type === 'image'}}" class="content-user-image">
+          <image 
+            class="user-image" 
+            src="{{content.localPath || content.data}}" 
+            mode="widthFix"
+            bindtap="previewImage"
+            data-url="{{content.localPath || content.data}}"
+          />
+        </view>
+
+      </block>
+
+    </view>
+
+    <!-- 用户头像 -->
+    <view class="msg-avatar user-avatar" wx:if="{{item.role === 'user'}}">
+      <text>我</text>
+    </view>
+
+  </view>
+
+  <!-- 滚动锚点 -->
+  <view id="chat-bottom" style="height: 20rpx;"></view>
+
+</scroll-view>
+
+<!-- 快捷问题（有消息时显示在底部） -->
+<scroll-view scroll-x class="quick-bar" wx:if="{{messages.length > 0 && !isLoading}}" show-scrollbar="{{false}}">
+  <view class="quick-bar-list">
+    <view class="quick-bar-item" wx:for="{{suggestions.length > 0 ? suggestions : quickQuestions}}" wx:key="index" bindtap="sendQuickQuestion" data-text="{{item}}">
+      <text>{{item}}</text>
+    </view>
+  </view>
+</scroll-view>
+
+<!-- 输入区域 -->
+<view class="input-area">
+  <!-- 图片预览 -->
+  <view class="image-preview" wx:if="{{selectedImage}}">
+    <image class="preview-img" src="{{selectedImage}}" mode="aspectFill"/>
+    <view class="remove-image" bindtap="removeImage">
+      <text>×</text>
+    </view>
+  </view>
+
+  <view class="input-row">
+    <!-- 添加图片按钮 -->
+    <view class="add-image-btn" bindtap="chooseImage">
+      <view class="add-icon">+</view>
+    </view>
+
+    <textarea
+      class="input-box"
+      placeholder="输入您的问题..."
+      placeholder-class="input-placeholder"
+      value="{{inputText}}"
+      bindinput="onInput"
+      confirm-type="send"
+      auto-height
+      maxlength="500"
+      disabled="{{isLoading}}"
+    />
+    <view class="send-btn {{((inputText.length > 0 || selectedImage) && !isLoading) ? 'send-active' : 'send-disabled'}}" bindtap="sendMessage">
+      <view class="send-icon"></view>
+    </view>
+  </view>
+</view>
+
+</view>

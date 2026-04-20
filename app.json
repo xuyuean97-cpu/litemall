@@ -1,4 +1,5 @@
 {
+  "lazyCodeLoading": "requiredComponents",
   "pages": [
     "pages/index/index",
     "pages/catalog/catalog",
@@ -41,7 +42,8 @@
     "pages/ucenter/aftersale/aftersale",
     "pages/ucenter/aftersaleList/aftersaleList",
     "pages/ucenter/aftersaleDetail/aftersaleDetail",
-    "pages/ucenter/vipAuth/vipAuth"
+    "pages/ucenter/vipAuth/vipAuth",
+    "pages/aiChat/aiChat"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FFFFFF",

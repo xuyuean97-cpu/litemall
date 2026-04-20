@@ -329,6 +329,11 @@ Page({
       wx.stopPullDownRefresh();
     });
   },
+  openAiChat() {
+    wx.navigateTo({
+      url: '/pages/aiChat/aiChat'
+    });
+  },
 
   onShareAppMessage() {
     return {
